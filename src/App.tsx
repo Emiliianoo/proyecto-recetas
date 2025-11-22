@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./App.css";
 import { Receta } from "./types";
-import RecipeList from "./components/RecipeList/RecipeList";
-import Modal from "./components/Modal/Modal";
-import RecipeForm from "./components/RecipeForm/RecipeForm";
+import RecipeList from "./Componentes/RecipeList/RecipeList";
+import Modal from "./Componentes/Modal/Modal";
+import RecipeForm from "./Componentes/RecipeForm/RecipeForm";
 
 function App() {
   // Estado global donde se guardan TODAS las recetas

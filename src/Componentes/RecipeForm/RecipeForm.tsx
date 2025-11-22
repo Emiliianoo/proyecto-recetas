@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Receta, Ingrediente, Instruccion } from "../../../types";
+import { Receta, Ingrediente, Instruccion } from "../../types";
 import "./RecipeForm.css";
 import { v4 as uuid } from "uuid";
-import IngredientList from "../../IngredientList/IngredientList";
+import IngredientList from "../IngredientList/IngredientList";
 
 interface Props {
   agregarReceta: (receta: Receta) => void;
