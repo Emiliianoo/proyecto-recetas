@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { Receta } from "./types";
+import type { Receta } from "./types";
 import RecipeList from "./Componentes/RecipeList/RecipeList";
 import Modal from "./Componentes/Modal/Modal";
 import RecipeForm from "./Componentes/RecipeForm/RecipeForm";

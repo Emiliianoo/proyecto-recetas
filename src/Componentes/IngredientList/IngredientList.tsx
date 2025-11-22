@@ -1,4 +1,4 @@
-import { Ingrediente } from "../../types";
+import type { Ingrediente } from "../../types";
 import "./IngredientList.css";
 
 interface Props {

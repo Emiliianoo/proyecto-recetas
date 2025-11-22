@@ -1,4 +1,4 @@
-import { Receta } from "../../types";
+import type { Receta } from "../../types";
 import "./RecipeCard.css";
 
 interface Props {

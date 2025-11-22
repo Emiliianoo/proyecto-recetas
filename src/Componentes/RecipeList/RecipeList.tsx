@@ -1,4 +1,4 @@
-import { Receta } from "../../types";
+import type { Receta } from "../../types";
 import RecipeCard from "../RecipeCard/RecipeCard";
 import "./RecipeList.css";
 

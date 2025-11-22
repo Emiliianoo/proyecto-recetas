@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Receta, Ingrediente, Instruccion } from "../../types";
+import type { Receta, Ingrediente, Instruccion } from "../../types";
 import "./RecipeForm.css";
-import { v4 as uuid } from "uuid";
 import IngredientList from "../IngredientList/IngredientList";
 
 interface Props {
@@ -31,7 +30,7 @@ export default function RecipeForm({ agregarReceta }: Props) {
 
     setIngredientes([
       ...ingredientes,
-      { id: uuid(), nombre: nuevoIngrediente },
+      { id: crypto.randomUUID(), nombre: nuevoIngrediente },
     ]);
 
     setNuevoIngrediente("");
@@ -46,7 +45,7 @@ export default function RecipeForm({ agregarReceta }: Props) {
 
     setListaInstrucciones([
       ...listaInstrucciones,
-      { id: uuid(), texto: nuevaInstruccion },
+      { id: crypto.randomUUID(), texto: nuevaInstruccion },
     ]);
 
     setNuevaInstruccion("");
@@ -57,7 +56,6 @@ export default function RecipeForm({ agregarReceta }: Props) {
   };
 
   const guardarReceta = () => {
-    // Validaciones básicas
     if (
       !nombre ||
       !tipoCocina ||
@@ -71,7 +69,7 @@ export default function RecipeForm({ agregarReceta }: Props) {
     }
 
     const nuevaReceta: Receta = {
-      id: uuid(),
+      id: crypto.randomUUID(),
       nombre,
       tipoCocina,
       ingredientes,
@@ -116,7 +114,6 @@ export default function RecipeForm({ agregarReceta }: Props) {
         </button>
       </div>
 
-      {/* Lista visible de ingredientes */}
       <IngredientList
         ingredientes={ingredientes}
         eliminarIngrediente={eliminarIngrediente}
