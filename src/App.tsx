@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import { Receta } from "./types";
+import RecipeList from "./components/RecipeList/RecipeList";
+import Modal from "./components/Modal/Modal";
+import RecipeForm from "./components/RecipeForm/RecipeForm";
 
 function App() {
-  const [count, setCount] = useState(0)
+  // Estado global donde se guardan TODAS las recetas
+  const [recetas, setRecetas] = useState<Receta[]>([]);
+
+  // Controla si el modal (formulario) está visible
+  const [mostrarModal, setMostrarModal] = useState(false);
+
+  // Función para agregar una nueva receta al estado global
+  const agregarReceta = (nuevaReceta: Receta) => {
+    setRecetas((prev) => [...prev, nuevaReceta]);
+    setMostrarModal(false);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="contenedor-app">
+      {/* Título principal */}
+      <h1 className="titulo-principal">Mis Recetas</h1>
+
+      {/* Botón para abrir el modal */}
+      <button className="btn-agregar" onClick={() => setMostrarModal(true)}>
+        Agregar Receta
+      </button>
+
+      {/* Lista principal de recetas */}
+      <RecipeList recetas={recetas} />
+
+      {/* Modal propio */}
+      <Modal mostrar={mostrarModal} cerrar={() => setMostrarModal(false)}>
+        <RecipeForm agregarReceta={agregarReceta} />
+      </Modal>
+    </div>
+  );
 }
 
-export default App
+export default App;
