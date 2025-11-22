@@ -1,30 +1,43 @@
+/* Contenedor principal */
 .contenedor-app {
   max-width: 900px;
   margin: auto;
   padding: 20px;
-  padding-top: 40px; /* separa todo del navegador */
+  padding-top: 40px;
 }
 
+/* Título */
 .titulo-principal {
-  text-align: center;
   font-size: 36px;
-  margin-bottom: 30px;
-  color: #333;
   font-weight: 700;
+  color: #333;
 }
 
+/* Encabezado con flexbox */
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Botón morado */
 .btn-agregar {
-  background-color: #27ae60;
+  background-color: #7d3cff; /* Morado */
   color: white;
   padding: 12px 18px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-  float: right;
-  margin-bottom: 30px;
+  transition: 0.2s ease;
 }
 
 .btn-agregar:hover {
-  background-color: #1e874b;
+  background-color: #692fd8;
+}
+
+/* Por si algún componente necesita espacio */
+.CreacionReceta {
+  margin-bottom: 10px;
 }

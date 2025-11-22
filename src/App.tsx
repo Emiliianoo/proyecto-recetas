@@ -20,13 +20,14 @@ function App() {
 
   return (
     <div className="contenedor-app">
-      {/* Título principal */}
-      <h1 className="titulo-principal">Mis Recetas</h1>
+      {/* Encabezado con título + botón */}
+      <div className="encabezado">
+        <h1 className="titulo-principal">Mis Recetas</h1>
 
-      {/* Botón para abrir el modal */}
-      <button className="btn-agregar" onClick={() => setMostrarModal(true)}>
-        Agregar Receta
-      </button>
+        <button className="btn-agregar" onClick={() => setMostrarModal(true)}>
+          Agregar Receta
+        </button>
+      </div>
 
       {/* Lista principal de recetas */}
       <RecipeList recetas={recetas} />
