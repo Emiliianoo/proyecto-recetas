@@ -1,3 +1,15 @@
+.lista {
+  padding: 0;
+  list-style: none;
+}
+
 .lista li {
-  margin-bottom: 5px;
+  background: #ffffff;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
