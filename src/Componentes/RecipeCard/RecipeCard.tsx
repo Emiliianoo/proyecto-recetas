@@ -3,29 +3,18 @@ import "./RecipeCard.css";
 
 interface Props {
   receta: Receta;
+  onVer: (receta: Receta) => void;
 }
 
-export default function RecipeCard({ receta }: Props) {
+export default function RecipeCard({ receta, onVer }: Props) {
   return (
     <div className="tarjeta">
       <h3>{receta.nombre}</h3>
-      <p>
-        <strong>Tipo:</strong> {receta.tipoCocina}
-      </p>
+      <p className="tipo">Tipo de cocina: {receta.tipoCocina}</p>
 
-      <h4>Ingredientes</h4>
-      <ul>
-        {receta.ingredientes.map((i) => (
-          <li key={i.id}>{i.nombre}</li>
-        ))}
-      </ul>
-
-      <h4>Instrucciones</h4>
-      <ol>
-        {receta.instrucciones.map((i) => (
-          <li key={i.id}>{i.texto}</li>
-        ))}
-      </ol>
+      <button className="btn-ver" onClick={() => onVer(receta)}>
+        Ver
+      </button>
     </div>
   );
 }

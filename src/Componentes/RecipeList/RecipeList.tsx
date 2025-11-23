@@ -1,23 +1,20 @@
-import "./RecipeList.css";
 import type { Receta } from "../../types";
+import RecipeCard from "../RecipeCard/RecipeCard";
+import "./RecipeList.css";
 
 interface Props {
   recetas: Receta[];
-  verReceta: (receta: Receta) => void;
+  onVer: (receta: Receta) => void;
 }
 
-export default function RecipeList({ recetas, verReceta }: Props) {
+export default function RecipeList({ recetas, onVer }: Props) {
+  if (recetas.length === 0)
+    return <p className="texto-vacio">No hay recetas registradas.</p>;
+
   return (
     <div className="lista-recetas">
-      {recetas.map((receta, index) => (
-        <div className="tarjeta-receta" key={index}>
-          <h3>{receta.nombre}</h3>
-          <p className="tipo">{receta.tipoCocina}</p>
-
-          <button className="btn-ver" onClick={() => verReceta(receta)}>
-            Ver
-          </button>
-        </div>
+      {recetas.map((r) => (
+        <RecipeCard key={r.id} receta={r} onVer={onVer} />
       ))}
     </div>
   );

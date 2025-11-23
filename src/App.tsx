@@ -21,17 +21,15 @@ function App() {
 
   return (
     <div className="contenedor-app">
-      <div className="CreacionReceta">
+      <div className="encabezado">
         <h1 className="titulo-principal">Mis Recetas</h1>
+
         <button className="btn-agregar" onClick={() => setMostrarModal(true)}>
           Agregar Receta
         </button>
       </div>
 
-      <RecipeList
-        recetas={recetas}
-        verReceta={(r) => setRecetaSeleccionada(r)}
-      />
+      <RecipeList recetas={recetas} onVer={setRecetaSeleccionada} />
 
       <Modal mostrar={mostrarModal} cerrar={() => setMostrarModal(false)}>
         <RecipeForm agregarReceta={agregarReceta} />
