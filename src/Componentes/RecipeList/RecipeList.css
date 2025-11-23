@@ -1,11 +1,13 @@
-.lista-recetas {
-  margin-top: 40px; /* antes era 20, ahora separamos REALMENTE */
-  padding-bottom: 40px;
+.btn-ver {
+  background-color: #6c63ff;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
 }
 
-.texto-vacio {
-  text-align: center;
-  color: #888;
-  font-size: 18px;
-  margin-top: 30px;
+.btn-ver:hover {
+  background-color: #574fd0;
 }

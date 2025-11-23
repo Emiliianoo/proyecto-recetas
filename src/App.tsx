@@ -4,15 +4,16 @@ import type { Receta } from "./types";
 import RecipeList from "./Componentes/RecipeList/RecipeList";
 import Modal from "./Componentes/Modal/Modal";
 import RecipeForm from "./Componentes/RecipeForm/RecipeForm";
+import RecipeViewModal from "./Componentes/RecipeViewModal/RecipeViewModal";
 
 function App() {
-  // Estado global donde se guardan TODAS las recetas
   const [recetas, setRecetas] = useState<Receta[]>([]);
-
-  // Controla si el modal (formulario) está visible
   const [mostrarModal, setMostrarModal] = useState(false);
 
-  // Función para agregar una nueva receta al estado global
+  const [recetaSeleccionada, setRecetaSeleccionada] = useState<Receta | null>(
+    null
+  );
+
   const agregarReceta = (nuevaReceta: Receta) => {
     setRecetas((prev) => [...prev, nuevaReceta]);
     setMostrarModal(false);
@@ -20,22 +21,26 @@ function App() {
 
   return (
     <div className="contenedor-app">
-      {/* Encabezado con título + botón */}
-      <div className="encabezado">
+      <div className="CreacionReceta">
         <h1 className="titulo-principal">Mis Recetas</h1>
-
         <button className="btn-agregar" onClick={() => setMostrarModal(true)}>
           Agregar Receta
         </button>
       </div>
 
-      {/* Lista principal de recetas */}
-      <RecipeList recetas={recetas} />
+      <RecipeList
+        recetas={recetas}
+        verReceta={(r) => setRecetaSeleccionada(r)}
+      />
 
-      {/* Modal propio */}
       <Modal mostrar={mostrarModal} cerrar={() => setMostrarModal(false)}>
         <RecipeForm agregarReceta={agregarReceta} />
       </Modal>
+
+      <RecipeViewModal
+        receta={recetaSeleccionada}
+        cerrar={() => setRecetaSeleccionada(null)}
+      />
     </div>
   );
 }
