@@ -4,6 +4,10 @@ import RecipeForm from "./RecipeForm";
 describe("RecipeForm", () => {
   const agregarRecetaMock = vi.fn();
 
+  beforeEach(() => {
+    agregarRecetaMock.mockClear(); // limpia llamadas previas
+  });
+
   test("Guardar receta con todos los campos completos", () => {
     render(<RecipeForm agregarReceta={agregarRecetaMock} />);
     fireEvent.change(screen.getByLabelText(/Nombre de la receta/i), {

@@ -86,16 +86,18 @@ export default function RecipeForm({ agregarReceta }: Props) {
       {error && <p className="error">{error}</p>}
 
       {/* Nombre */}
-      <label>Nombre de la receta</label>
+      <label htmlFor="nombre">Nombre de la receta</label>
       <input
+        id="nombre"
         type="text"
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
       />
 
       {/* Tipo de cocina */}
-      <label>Tipo de cocina</label>
+      <label htmlFor="tipo">Tipo de cocina</label>
       <input
+        id="tipo"
         type="text"
         value={tipoCocina}
         onChange={(e) => setTipoCocina(e.target.value)}

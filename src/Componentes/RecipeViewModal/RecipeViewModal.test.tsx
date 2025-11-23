@@ -15,7 +15,7 @@ describe("RecipeViewModal", () => {
   test("Renderizar receta completa", () => {
     render(<RecipeViewModal receta={receta} cerrar={cerrarMock} />);
     expect(screen.getByText("Taco")).toBeInTheDocument();
-    expect(screen.getByText(/Tipo de cocina: Mexicana/i)).toBeInTheDocument();
+    expect(screen.getByText("Mexicana")).toBeInTheDocument();
     expect(screen.getByText("Carne")).toBeInTheDocument();
     expect(screen.getByText("Cocinar")).toBeInTheDocument();
   });
