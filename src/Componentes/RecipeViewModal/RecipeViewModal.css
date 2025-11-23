@@ -73,3 +73,9 @@
 .view-close-btn:hover {
   background-color: #5750d4;
 }
+
+.view-section ul,
+.view-section ol {
+  margin-top: 15px;
+  padding-left: 20px;
+}
