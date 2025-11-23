@@ -1,8 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-/// <reference types="vitest/config" />
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react({
@@ -11,4 +9,10 @@ export default defineConfig({
       },
     }),
   ],
+  // @ts-ignore
+  test: {
+    globals: true, // permite usar describe/test/expect sin importarlos
+    environment: "jsdom", // simula navegador
+    setupFiles: "./src/setupTests.ts", // archivo de setup global
+  },
 });
