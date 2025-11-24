@@ -145,3 +145,18 @@
 .view-close-btn:hover {
   background-color: #5750d4;
 }
+
+.btn-eliminar-nota {
+  background-color: #e74c3c; /* rojo fuerte */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-eliminar-nota:hover {
+  background-color: #c0392b; /* rojo oscuro */
+}

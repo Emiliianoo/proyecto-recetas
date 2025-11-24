@@ -12,6 +12,7 @@ describe("RecipeViewModal", () => {
 
   const cerrarMock = vi.fn();
   const onGuardarNotaMock = vi.fn();
+  const onEliminarNotaMock = vi.fn();
 
   test("Renderizar receta completa", () => {
     render(
@@ -19,6 +20,7 @@ describe("RecipeViewModal", () => {
         receta={receta}
         cerrar={cerrarMock}
         onGuardarNota={onGuardarNotaMock}
+        onEliminarNota={onEliminarNotaMock}
       />
     );
     expect(screen.getByText("Taco")).toBeInTheDocument();
@@ -33,6 +35,7 @@ describe("RecipeViewModal", () => {
         receta={receta}
         cerrar={cerrarMock}
         onGuardarNota={onGuardarNotaMock}
+        onEliminarNota={onEliminarNotaMock}
       />
     );
     fireEvent.click(screen.getByText(/Cerrar/i));
@@ -45,6 +48,7 @@ describe("RecipeViewModal", () => {
         receta={null}
         cerrar={cerrarMock}
         onGuardarNota={onGuardarNotaMock}
+        onEliminarNota={onEliminarNotaMock}
       />
     );
     expect(container.firstChild).toBeNull();

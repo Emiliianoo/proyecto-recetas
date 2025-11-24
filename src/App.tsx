@@ -46,6 +46,28 @@ function App() {
     );
   };
 
+  const manejarEliminarNota = (recetaId: string, notaId: string) => {
+    setRecetas((prev) =>
+      prev.map((r) =>
+        r.id === recetaId
+          ? {
+              ...r,
+              notas: (r.notas ?? []).filter((n) => n.id !== notaId),
+            }
+          : r
+      )
+    );
+
+    setRecetaSeleccionada((prev) =>
+      prev && prev.id === recetaId
+        ? {
+            ...prev,
+            notas: (prev.notas ?? []).filter((n) => n.id !== notaId),
+          }
+        : prev
+    );
+  };
+
   return (
     <div className="contenedor-app">
       <div className="encabezado">
@@ -66,6 +88,7 @@ function App() {
         receta={recetaSeleccionada}
         cerrar={() => setRecetaSeleccionada(null)}
         onGuardarNota={manejarGuardarNota}
+        onEliminarNota={manejarEliminarNota}
       />
     </div>
   );
