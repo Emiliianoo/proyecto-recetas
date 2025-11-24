@@ -20,6 +20,7 @@
   padding: 30px;
   border-radius: 12px;
   animation: fadeIn 0.2s ease-in-out;
+  box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -58,6 +59,77 @@
   color: #3b3a7e;
 }
 
+.view-section ul,
+.view-section ol {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+/* ====== NOTAS ====== */
+
+.nota-textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  padding: 8px;
+  margin-top: 8px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.lista-notas {
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0 12px 0;
+}
+
+.lista-notas li {
+  background: #f5f5f5;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+}
+
+.lista-notas p {
+  margin: 0 0 2px 0;
+}
+
+.lista-notas small {
+  font-size: 11px;
+  color: #666;
+}
+
+.error-nota {
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.btn-guardar-nota {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: #6c63ff;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  float: right;
+}
+
+.btn-guardar-nota:hover {
+  background-color: #5750d4;
+}
+
+.view-section::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
 .view-close-btn {
   background-color: #6c63ff;
   color: white;
@@ -67,15 +139,9 @@
   cursor: pointer;
   font-size: 16px;
   display: block;
-  margin: 0 auto;
+  margin: 10px auto 0 auto;
 }
 
 .view-close-btn:hover {
   background-color: #5750d4;
-}
-
-.view-section ul,
-.view-section ol {
-  margin-top: 15px;
-  padding-left: 20px;
 }

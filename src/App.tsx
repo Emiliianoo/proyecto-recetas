@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import type { Receta } from "./types";
+import type { Receta, NotaReceta } from "./types";
 import RecipeList from "./Componentes/RecipeList/RecipeList";
 import Modal from "./Componentes/Modal/Modal";
 import RecipeForm from "./Componentes/RecipeForm/RecipeForm";
@@ -17,6 +17,33 @@ function App() {
   const agregarReceta = (nuevaReceta: Receta) => {
     setRecetas((prev) => [...prev, nuevaReceta]);
     setMostrarModal(false);
+  };
+
+  const manejarGuardarNota = (recetaId: string, texto: string) => {
+    const nuevaNota: NotaReceta = {
+      id: crypto.randomUUID(),
+      texto,
+      fecha: new Date().toISOString(),
+    };
+
+    // 1) Actualizar la receta dentro del arreglo de recetas
+    setRecetas((prev) =>
+      prev.map((r) =>
+        r.id === recetaId
+          ? {
+              ...r,
+              notas: [...(r.notas ?? []), nuevaNota],
+            }
+          : r
+      )
+    );
+
+    // 2) Actualizar también la receta seleccionada (para que el modal se refresque)
+    setRecetaSeleccionada((prev) =>
+      prev && prev.id === recetaId
+        ? { ...prev, notas: [...(prev.notas ?? []), nuevaNota] }
+        : prev
+    );
   };
 
   return (
@@ -38,6 +65,7 @@ function App() {
       <RecipeViewModal
         receta={recetaSeleccionada}
         cerrar={() => setRecetaSeleccionada(null)}
+        onGuardarNota={manejarGuardarNota}
       />
     </div>
   );
