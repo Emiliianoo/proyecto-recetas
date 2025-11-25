@@ -68,6 +68,42 @@ function App() {
     );
   };
 
+  const manejarActualizarNota = (
+    recetaId: string,
+    notaId: string,
+    nuevoTexto: string
+  ) => {
+    const nuevaFecha = new Date().toISOString();
+
+    setRecetas((prev) =>
+      prev.map((r) =>
+        r.id === recetaId
+          ? {
+              ...r,
+              notas: (r.notas ?? []).map((n) =>
+                n.id === notaId
+                  ? { ...n, texto: nuevoTexto, fecha: nuevaFecha }
+                  : n
+              ),
+            }
+          : r
+      )
+    );
+
+    setRecetaSeleccionada((prev) =>
+      prev && prev.id === recetaId
+        ? {
+            ...prev,
+            notas: (prev.notas ?? []).map((n) =>
+              n.id === notaId
+                ? { ...n, texto: nuevoTexto, fecha: nuevaFecha }
+                : n
+            ),
+          }
+        : prev
+    );
+  };
+
   return (
     <div className="contenedor-app">
       <div className="encabezado">
@@ -89,6 +125,7 @@ function App() {
         cerrar={() => setRecetaSeleccionada(null)}
         onGuardarNota={manejarGuardarNota}
         onEliminarNota={manejarEliminarNota}
+        onActualizarNota={manejarActualizarNota}
       />
     </div>
   );

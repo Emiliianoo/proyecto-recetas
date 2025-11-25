@@ -8,6 +8,11 @@ interface Props {
   cerrar: () => void;
   onGuardarNota: (recetaId: string, texto: string) => void;
   onEliminarNota: (recetaId: string, notaId: string) => void;
+  onActualizarNota: (
+    recetaId: string,
+    notaId: string,
+    nuevoTexto: string
+  ) => void;
 }
 
 export default function RecipeViewModal({
@@ -15,25 +20,61 @@ export default function RecipeViewModal({
   cerrar,
   onGuardarNota,
   onEliminarNota,
+  onActualizarNota,
 }: Props) {
   const [notaTexto, setNotaTexto] = useState("");
   const [errorNota, setErrorNota] = useState("");
+  const [mensajeExito, setMensajeExito] = useState("");
 
-  // 🔥 Nuevo estado para el modal de confirmación
+  // Estado para eliminar
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [notaAEliminar, setNotaAEliminar] = useState<string | null>(null);
 
+  // Estado para el modo edición
+  const [estaEditando, setEstaEditando] = useState(false);
+  const [notaEditandoId, setNotaEditandoId] = useState<string | null>(null);
+
   if (!receta) return null;
 
-  const manejarGuardarNota = () => {
+  const manejarGuardarONActualizar = () => {
+    setErrorNota("");
+    setMensajeExito("");
+
     const limpia = notaTexto.trim();
     if (!limpia) {
       setErrorNota("La nota no puede estar vacía.");
       return;
     }
-    onGuardarNota(receta.id, limpia);
+
+    if (estaEditando && notaEditandoId) {
+      // actualizar nota existente
+      onActualizarNota(receta.id, notaEditandoId, limpia);
+      setMensajeExito("Nota actualizada correctamente.");
+      setEstaEditando(false);
+      setNotaEditandoId(null);
+      setNotaTexto("");
+    } else {
+      // crear nueva nota
+      onGuardarNota(receta.id, limpia);
+      setMensajeExito("Nota agregada correctamente.");
+      setNotaTexto("");
+    }
+  };
+
+  const manejarEditarNota = (notaId: string, texto: string) => {
+    setEstaEditando(true);
+    setNotaEditandoId(notaId);
+    setNotaTexto(texto);
+    setErrorNota("");
+    setMensajeExito("");
+  };
+
+  const manejarCancelarEdicion = () => {
+    setEstaEditando(false);
+    setNotaEditandoId(null);
     setNotaTexto("");
     setErrorNota("");
+    setMensajeExito("");
   };
 
   const abrirConfirmacion = (notaId: string) => {
@@ -47,17 +88,18 @@ export default function RecipeViewModal({
     }
     setMostrarConfirmacion(false);
     setNotaAEliminar(null);
+    setEstaEditando(false);
+    setNotaEditandoId(null);
+    setNotaTexto("");
   };
 
   return (
     <>
-      {/* Modal principal */}
       <div className="view-overlay" onClick={cerrar}>
         <div className="view-content" onClick={(e) => e.stopPropagation()}>
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
 
-          {/* Ingredientes */}
           <div className="view-section">
             <h3>Ingredientes</h3>
             <ul>
@@ -76,7 +118,7 @@ export default function RecipeViewModal({
             </ol>
           </div>
 
-          {/* Notas */}
+          {/* SECCIÓN DE NOTAS */}
           <div className="view-section">
             <h3>Notas</h3>
 
@@ -86,12 +128,20 @@ export default function RecipeViewModal({
                   <li key={nota.id}>
                     <div className="nota-header">
                       <p>{nota.texto}</p>
-                      <button
-                        className="btn-eliminar-nota"
-                        onClick={() => abrirConfirmacion(nota.id)}
-                      >
-                        Eliminar
-                      </button>
+                      <div className="nota-actions">
+                        <button
+                          className="btn-editar-nota"
+                          onClick={() => manejarEditarNota(nota.id, nota.texto)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="btn-eliminar-nota"
+                          onClick={() => abrirConfirmacion(nota.id)}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
                     </div>
                     <small>
                       {new Date(nota.fecha).toLocaleString("es-MX", {
@@ -110,16 +160,35 @@ export default function RecipeViewModal({
 
             <textarea
               className="nota-textarea"
-              placeholder="Escribe una nota sobre esta receta..."
+              placeholder={
+                estaEditando
+                  ? "Edita el texto de la nota..."
+                  : "Escribe una nota sobre esta receta..."
+              }
               value={notaTexto}
               onChange={(e) => setNotaTexto(e.target.value)}
             />
 
             {errorNota && <p className="error-nota">{errorNota}</p>}
+            {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
 
-            <button className="btn-guardar-nota" onClick={manejarGuardarNota}>
-              Guardar nota
-            </button>
+            <div className="nota-botones">
+              <button
+                className="btn-guardar-nota"
+                onClick={manejarGuardarONActualizar}
+              >
+                {estaEditando ? "Actualizar nota" : "Guardar nota"}
+              </button>
+
+              {estaEditando && (
+                <button
+                  className="btn-cancelar-edicion"
+                  onClick={manejarCancelarEdicion}
+                >
+                  Cancelar edición
+                </button>
+              )}
+            </div>
           </div>
 
           <button className="view-close-btn" onClick={cerrar}>
@@ -128,7 +197,6 @@ export default function RecipeViewModal({
         </div>
       </div>
 
-      {/* Modal de confirmación */}
       <ConfirmModal
         mostrar={mostrarConfirmacion}
         mensaje="¿Eliminar esta nota definitivamente?"
