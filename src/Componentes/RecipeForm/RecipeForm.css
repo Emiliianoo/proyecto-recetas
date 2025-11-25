@@ -1,0 +1,89 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+h2 {
+  margin-bottom: 5px;
+  font-size: 26px;
+  color: #444;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: -5px;
+  color: #333;
+}
+
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  background: #fafafa;
+}
+
+input:focus {
+  border-color: #3498db;
+}
+
+.fila-agregar {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-add {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-add:hover {
+  background-color: #2d89c6;
+}
+
+.lista {
+  list-style: none;
+  padding: 0;
+}
+
+.btn-eliminar {
+  margin-left: 10px;
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.btn-eliminar:hover {
+  background-color: #e04343;
+}
+
+.btn-guardar {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.btn-guardar:hover {
+  background-color: #27ae60;
+}
+
+.error {
+  color: #d63031;
+  font-weight: bold;
+}

@@ -1,0 +1,13 @@
+.btn-ver {
+  background-color: #6c63ff;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.btn-ver:hover {
+  background-color: #574fd0;
+}
