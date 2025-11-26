@@ -43,6 +43,10 @@ export default function RecipeViewModal({
     useState<FileList | null>(null);
   const [cargandoImagenes, setCargandoImagenes] = useState(false);
 
+  // Estado para lightbox de imágenes expandidas
+  const [mostrarLightbox, setMostrarLightbox] = useState(false);
+  const [imagenActual, setImagenActual] = useState<ImagenReceta | null>(null);
+
   if (!receta) return null;
 
   const manejarGuardarONActualizar = () => {
@@ -247,7 +251,14 @@ export default function RecipeViewModal({
               <h3>Imágenes de progreso</h3>
               <div className="galeria-imagenes">
                 {receta.imagenes.map((img) => (
-                  <div key={img.id} className="galeria-item">
+                  <div
+                    key={img.id}
+                    className="galeria-item"
+                    onClick={() => {
+                      setImagenActual(img);
+                      setMostrarLightbox(true);
+                    }}
+                  >
                     <img src={img.url} alt="Progreso" />
                     <small>
                       {new Date(img.fecha).toLocaleDateString("es-MX")}
@@ -321,6 +332,39 @@ export default function RecipeViewModal({
           </div>
         </div>
       </Modal>
+
+      {/* Lightbox para expandir imágenes */}
+      {mostrarLightbox && imagenActual && (
+        <div
+          className="lightbox-overlay"
+          onClick={() => {
+            setMostrarLightbox(false);
+            setImagenActual(null);
+          }}
+        >
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="lightbox-close"
+              onClick={() => {
+                setMostrarLightbox(false);
+                setImagenActual(null);
+              }}
+            >
+              ✕
+            </button>
+            <img src={imagenActual.url} alt="Imagen expandida" />
+            <p className="lightbox-fecha">
+              {new Date(imagenActual.fecha).toLocaleString("es-MX", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
