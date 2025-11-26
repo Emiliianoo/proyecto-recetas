@@ -52,6 +52,7 @@ export default function RecipeViewModal({
   const [cargandoImagenes, setCargandoImagenes] = useState(false);
   const [errorImagenes, setErrorImagenes] = useState<string | null>(null);
   const [errorReemplazo, setErrorReemplazo] = useState<string | null>(null);
+  const [imagenExito, setImagenExito] = useState<string | null>(null);
 
   // Estado para lightbox de imágenes expandidas
   const [mostrarLightbox, setMostrarLightbox] = useState(false);
@@ -125,12 +126,7 @@ export default function RecipeViewModal({
 
     // Validar tamaños y formatos antes de procesar
     const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
-    const allowedMimes = [
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "image/tiff",
-    ];
+    const allowedMimes = ["image/jpeg", "image/png", "image/gif", "image/tiff"];
     const rawExtensions = [".raw", ".nef", ".cr2", ".arw", ".dng"];
 
     for (let i = 0; i < archivosSeleccionados.length; i++) {
@@ -177,6 +173,8 @@ export default function RecipeViewModal({
 
     onGuardarImagenes(receta.id, nuevasImagenes);
     setCargandoImagenes(false);
+    setImagenExito("Imágenes subidas correctamente.");
+    setTimeout(() => setImagenExito(null), 3000);
     setMostrarModalImagen(false);
     setArchivosSeleccionados(null);
   };
@@ -184,12 +182,7 @@ export default function RecipeViewModal({
   // Valida un único archivo para reemplazo
   const validarArchivo = (file: File) => {
     const MAX_SIZE = 5 * 1024 * 1024;
-    const allowedMimes = [
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "image/tiff",
-    ];
+    const allowedMimes = ["image/jpeg", "image/png", "image/gif", "image/tiff"];
     const rawExtensions = [".raw", ".nef", ".cr2", ".arw", ".dng"];
 
     const mimeOK = allowedMimes.includes(file.type.toLowerCase());
@@ -205,7 +198,10 @@ export default function RecipeViewModal({
     }
 
     if (file.size > MAX_SIZE) {
-      return { ok: false, reason: "El archivo excede el tamaño máximo de 5 MB." } as const;
+      return {
+        ok: false,
+        reason: "El archivo excede el tamaño máximo de 5 MB.",
+      } as const;
     }
 
     return { ok: true } as const;
@@ -368,6 +364,7 @@ export default function RecipeViewModal({
               {errorReemplazo && (
                 <p className="error-imagenes">{errorReemplazo}</p>
               )}
+              {imagenExito && <p className="success-imagenes">{imagenExito}</p>}
             </div>
           )}
 
@@ -454,6 +451,7 @@ export default function RecipeViewModal({
               Cerrar
             </button>
           </div>
+          {imagenExito && <p className="success-imagenes">{imagenExito}</p>}
         </div>
       </Modal>
 
@@ -507,7 +505,8 @@ export default function RecipeViewModal({
           if (!resultado.ok) {
             setErrorReemplazo(resultado.reason);
             // limpiar input
-            if (reemplazarInputRef.current) reemplazarInputRef.current.value = "";
+            if (reemplazarInputRef.current)
+              reemplazarInputRef.current.value = "";
             return;
           }
 
@@ -524,8 +523,11 @@ export default function RecipeViewModal({
 
             onReemplazarImagen(receta.id, imagenAReemplazar, nuevaImagen);
             setImagenAReemplazar(null);
+            setImagenExito("Imagen reemplazada correctamente.");
+            setTimeout(() => setImagenExito(null), 3000);
             // limpiar input
-            if (reemplazarInputRef.current) reemplazarInputRef.current.value = "";
+            if (reemplazarInputRef.current)
+              reemplazarInputRef.current.value = "";
           };
           reader.readAsDataURL(file);
         }}

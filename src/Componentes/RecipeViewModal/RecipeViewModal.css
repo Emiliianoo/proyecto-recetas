@@ -469,6 +469,17 @@
   font-size: 13px;
 }
 
+/* Mensaje de éxito para operaciones de imágenes */
+.success-imagenes {
+  color: #155724;
+  background: #e6ffef;
+  padding: 8px 10px;
+  border: 1px solid rgba(21, 87, 60, 0.08);
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
 /* Botones del modal de imágenes */
 .modal-imagen-botones {
   display: flex;
