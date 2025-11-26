@@ -422,6 +422,42 @@
   transform: scale(1.1);
 }
 
+/* Botón de reemplazar: diseño más integrado con el tema morado */
+.galeria-btn-reemplazar {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #6c63ff;
+  border: 1px solid rgba(108, 99, 255, 0.14);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.18s ease;
+  box-shadow: 0 6px 18px rgba(108, 99, 255, 0.08);
+}
+
+.galeria-item:hover .galeria-btn-reemplazar {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.galeria-btn-reemplazar:hover {
+  background: linear-gradient(90deg, #6c63ff, #8b6bff);
+  color: white;
+  transform: scale(1.08);
+}
+
+.galeria-btn-reemplazar:focus {
+  outline: 3px solid rgba(108, 99, 255, 0.12);
+}
+
 /* Botones del modal de imágenes */
 .modal-imagen-botones {
   display: flex;

@@ -153,6 +153,40 @@ function App() {
     );
   };
 
+  const manejarReemplazarImagen = (
+    recetaId: string,
+    imagenId: string,
+    nuevaImagen: ImagenReceta
+  ) => {
+    setRecetas((prev) =>
+      prev.map((r) =>
+        r.id === recetaId
+          ? {
+              ...r,
+              imagenes: (r.imagenes ?? []).map((img) =>
+                img.id === imagenId
+                  ? { ...img, url: nuevaImagen.url, fecha: nuevaImagen.fecha }
+                  : img
+              ),
+            }
+          : r
+      )
+    );
+
+    setRecetaSeleccionada((prev) =>
+      prev && prev.id === recetaId
+        ? {
+            ...prev,
+            imagenes: (prev.imagenes ?? []).map((img) =>
+              img.id === imagenId
+                ? { ...img, url: nuevaImagen.url, fecha: nuevaImagen.fecha }
+                : img
+            ),
+          }
+        : prev
+    );
+  };
+
   return (
     <div className="contenedor-app">
       <div className="encabezado">
@@ -177,6 +211,7 @@ function App() {
         onActualizarNota={manejarActualizarNota}
         onGuardarImagenes={manejarGuardarImagenes}
         onEliminarImagen={manejarEliminarImagen}
+        onReemplazarImagen={manejarReemplazarImagen}
       />
     </div>
   );

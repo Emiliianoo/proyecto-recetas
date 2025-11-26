@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./RecipeViewModal.css";
 import type { Receta, ImagenReceta } from "../../types";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
@@ -16,6 +16,11 @@ interface Props {
   ) => void;
   onGuardarImagenes: (recetaId: string, imagenes: ImagenReceta[]) => void;
   onEliminarImagen: (recetaId: string, imagenId: string) => void;
+  onReemplazarImagen: (
+    recetaId: string,
+    imagenId: string,
+    nuevaImagen: ImagenReceta
+  ) => void;
 }
 
 export default function RecipeViewModal({
@@ -26,6 +31,7 @@ export default function RecipeViewModal({
   onActualizarNota,
   onGuardarImagenes,
   onEliminarImagen,
+  onReemplazarImagen,
 }: Props) {
   const [notaTexto, setNotaTexto] = useState("");
   const [errorNota, setErrorNota] = useState("");
@@ -48,6 +54,10 @@ export default function RecipeViewModal({
   // Estado para lightbox de imágenes expandidas
   const [mostrarLightbox, setMostrarLightbox] = useState(false);
   const [imagenActual, setImagenActual] = useState<ImagenReceta | null>(null);
+  const [imagenAReemplazar, setImagenAReemplazar] = useState<string | null>(
+    null
+  );
+  const reemplazarInputRef = useRef<HTMLInputElement | null>(null);
 
   if (!receta) return null;
 
@@ -277,6 +287,18 @@ export default function RecipeViewModal({
                     >
                       ✕
                     </button>
+                    <button
+                      className="galeria-btn-reemplazar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setImagenAReemplazar(img.id);
+                        // trigger hidden input
+                        reemplazarInputRef.current?.click();
+                      }}
+                      title="Reemplazar imagen"
+                    >
+                      ↻
+                    </button>
                   </div>
                 ))}
               </div>
@@ -379,6 +401,35 @@ export default function RecipeViewModal({
           </div>
         </div>
       )}
+      {/* hidden input para reemplazar imagen */}
+      <input
+        ref={reemplazarInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={async (e) => {
+          const files = e.target.files;
+          if (!files || files.length === 0 || !imagenAReemplazar) return;
+
+          const file = files[0];
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const url = ev.target?.result as string;
+            const nuevaImagen: ImagenReceta = {
+              id: imagenAReemplazar,
+              url,
+              fecha: new Date().toISOString(),
+            };
+
+            onReemplazarImagen(receta.id, imagenAReemplazar, nuevaImagen);
+            setImagenAReemplazar(null);
+            // limpiar input
+            if (reemplazarInputRef.current)
+              reemplazarInputRef.current.value = "";
+          };
+          reader.readAsDataURL(file);
+        }}
+      />
     </>
   );
 }
