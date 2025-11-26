@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./RecipeViewModal.css";
 import type { Receta } from "../../types";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
+import Modal from "../Modal/Modal";
 
 interface Props {
   receta: Receta | null;
@@ -33,6 +34,10 @@ export default function RecipeViewModal({
   // Estado para el modo edición
   const [estaEditando, setEstaEditando] = useState(false);
   const [notaEditandoId, setNotaEditandoId] = useState<string | null>(null);
+
+  // Estado para modal de agregar imagen (UI-only)
+  const [mostrarModalImagen, setMostrarModalImagen] = useState(false);
+  const [archivosSeleccionados, setArchivosSeleccionados] = useState<FileList | null>(null);
 
   if (!receta) return null;
 
@@ -99,6 +104,11 @@ export default function RecipeViewModal({
         <div className="view-content" onClick={(e) => e.stopPropagation()}>
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
+          <div className="view-actions">
+            <button className="btn-agregar-imagen" onClick={() => { setArchivosSeleccionados(null); setMostrarModalImagen(true); }}>
+              Agregar Imagen
+            </button>
+          </div>
 
           <div className="view-section">
             <h3>Ingredientes</h3>
@@ -203,6 +213,34 @@ export default function RecipeViewModal({
         onConfirmar={confirmarEliminacion}
         onCancelar={() => setMostrarConfirmacion(false)}
       />
+
+      <Modal mostrar={mostrarModalImagen} cerrar={() => setMostrarModalImagen(false)}>
+        <div className="modal-imagen-contenido">
+          <h3>Agregar imágenes (vista)</h3>
+          <p className="nota-pequena">Por ahora solo se muestra el selector de archivos; las imágenes no se guardarán.</p>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => setArchivosSeleccionados(e.target.files)}
+          />
+
+          {archivosSeleccionados && archivosSeleccionados.length > 0 && (
+            <div className="lista-archivos">
+              <p>Archivos seleccionados:</p>
+              <ul>
+                {Array.from(archivosSeleccionados).map((f, idx) => (
+                  <li key={idx}>{f.name} ({Math.round(f.size / 1024)} KB)</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div style={{ marginTop: 12 }}>
+            <button onClick={() => setMostrarModalImagen(false)}>Cerrar</button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

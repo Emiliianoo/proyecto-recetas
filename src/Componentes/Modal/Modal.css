@@ -9,7 +9,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  /* debe aparecer por encima del overlay de RecipeViewModal (z-index:2000) */
+  z-index: 3001;
 }
 
 /* Contenedor del popup */
