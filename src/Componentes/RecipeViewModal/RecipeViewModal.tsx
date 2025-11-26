@@ -24,6 +24,7 @@ export default function RecipeViewModal({ receta, cerrar }: Props) {
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
         tabIndex={-1}
       >
         <h2 className="view-title">{receta.nombre}</h2>
