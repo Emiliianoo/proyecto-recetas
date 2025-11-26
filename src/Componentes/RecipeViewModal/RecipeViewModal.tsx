@@ -10,22 +10,20 @@ export default function RecipeViewModal({ receta, cerrar }: Props) {
   if (!receta) return null;
 
   return (
-    <div
-      className="view-overlay"
-      role="button"
-      tabIndex={0}
-      onClick={cerrar}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") cerrar();
-      }}
-    >
+    <div className="view-overlay">
+      {/* Botón accesible para cerrar (no mueve nada visualmente) */}
+      <button
+        className="overlay-dismiss"
+        aria-label="Cerrar modal"
+        onClick={cerrar}
+      ></button>
+
+      {/* Contenido del modal (sin errores de accesibilidad) */}
       <div
         className="view-content"
-        role="dialog"
+        role="document"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-        tabIndex={-1}
       >
         <h2 className="view-title">{receta.nombre}</h2>
         <p className="view-subtitle">{receta.tipoCocina}</p>
