@@ -361,6 +361,7 @@
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 12px;
   margin-top: 12px;
+  position: relative;
 }
 
 .galeria-item {
@@ -370,6 +371,7 @@
   border: 1px solid #ddd;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
 }
 
 .galeria-item:hover {
@@ -390,6 +392,34 @@
   background: #fafafa;
   font-size: 11px;
   color: #666;
+}
+
+.galeria-btn-eliminar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.galeria-item:hover .galeria-btn-eliminar {
+  opacity: 1;
+}
+
+.galeria-btn-eliminar:hover {
+  background: #c0392b;
+  transform: scale(1.1);
 }
 
 /* Botones del modal de imágenes */

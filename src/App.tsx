@@ -129,6 +129,30 @@ function App() {
     );
   };
 
+  const manejarEliminarImagen = (recetaId: string, imagenId: string) => {
+    setRecetas((prev) =>
+      prev.map((r) =>
+        r.id === recetaId
+          ? {
+              ...r,
+              imagenes: (r.imagenes ?? []).filter((img) => img.id !== imagenId),
+            }
+          : r
+      )
+    );
+
+    setRecetaSeleccionada((prev) =>
+      prev && prev.id === recetaId
+        ? {
+            ...prev,
+            imagenes: (prev.imagenes ?? []).filter(
+              (img) => img.id !== imagenId
+            ),
+          }
+        : prev
+    );
+  };
+
   return (
     <div className="contenedor-app">
       <div className="encabezado">
@@ -152,6 +176,7 @@ function App() {
         onEliminarNota={manejarEliminarNota}
         onActualizarNota={manejarActualizarNota}
         onGuardarImagenes={manejarGuardarImagenes}
+        onEliminarImagen={manejarEliminarImagen}
       />
     </div>
   );

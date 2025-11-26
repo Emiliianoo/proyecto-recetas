@@ -15,6 +15,7 @@ interface Props {
     nuevoTexto: string
   ) => void;
   onGuardarImagenes: (recetaId: string, imagenes: ImagenReceta[]) => void;
+  onEliminarImagen: (recetaId: string, imagenId: string) => void;
 }
 
 export default function RecipeViewModal({
@@ -24,6 +25,7 @@ export default function RecipeViewModal({
   onEliminarNota,
   onActualizarNota,
   onGuardarImagenes,
+  onEliminarImagen,
 }: Props) {
   const [notaTexto, setNotaTexto] = useState("");
   const [errorNota, setErrorNota] = useState("");
@@ -263,6 +265,18 @@ export default function RecipeViewModal({
                     <small>
                       {new Date(img.fecha).toLocaleDateString("es-MX")}
                     </small>
+                    <button
+                      className="galeria-btn-eliminar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm("¿Deseas eliminar esta imagen?")) {
+                          onEliminarImagen(receta.id, img.id);
+                        }
+                      }}
+                      title="Eliminar imagen"
+                    >
+                      ✕
+                    </button>
                   </div>
                 ))}
               </div>
