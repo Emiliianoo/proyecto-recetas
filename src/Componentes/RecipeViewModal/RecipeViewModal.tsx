@@ -2,8 +2,8 @@ import "./RecipeViewModal.css";
 import type { Receta } from "../../types";
 
 interface Props {
-  receta: Receta | null;
-  cerrar: () => void;
+  readonly receta: Receta | null;
+  readonly cerrar: () => void;
 }
 
 export default function RecipeViewModal({ receta, cerrar }: Props) {
