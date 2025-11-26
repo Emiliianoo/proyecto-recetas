@@ -50,6 +50,8 @@ export default function RecipeViewModal({
   const [archivosSeleccionados, setArchivosSeleccionados] =
     useState<FileList | null>(null);
   const [cargandoImagenes, setCargandoImagenes] = useState(false);
+  const [errorImagenes, setErrorImagenes] = useState<string | null>(null);
+  const [errorReemplazo, setErrorReemplazo] = useState<string | null>(null);
 
   // Estado para lightbox de imágenes expandidas
   const [mostrarLightbox, setMostrarLightbox] = useState(false);
@@ -121,6 +123,37 @@ export default function RecipeViewModal({
   const manejarCargarImagenes = async () => {
     if (!archivosSeleccionados || archivosSeleccionados.length === 0) return;
 
+    // Validar tamaños y formatos antes de procesar
+    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+    const allowedMimes = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/tiff",
+    ];
+    const rawExtensions = [".raw", ".nef", ".cr2", ".arw", ".dng"];
+
+    for (let i = 0; i < archivosSeleccionados.length; i++) {
+      const f = archivosSeleccionados[i];
+      const mimeOK = allowedMimes.includes(f.type.toLowerCase());
+      const name = f.name.toLowerCase();
+      const extOK = rawExtensions.some((ext) => name.endsWith(ext));
+      if (!mimeOK && !extOK) {
+        setErrorImagenes(
+          `Formato no soportado: ${f.name}. Formatos permitidos: JPEG, PNG, GIF, TIFF, RAW.`
+        );
+        return;
+      }
+      if (f.size > MAX_SIZE) {
+        setErrorImagenes(
+          `El archivo ${f.name} excede el tamaño máximo de 5 MB.`
+        );
+        return;
+      }
+    }
+
+    setErrorImagenes(null);
+
     setCargandoImagenes(true);
     const nuevasImagenes: ImagenReceta[] = [];
 
@@ -146,6 +179,36 @@ export default function RecipeViewModal({
     setCargandoImagenes(false);
     setMostrarModalImagen(false);
     setArchivosSeleccionados(null);
+  };
+
+  // Valida un único archivo para reemplazo
+  const validarArchivo = (file: File) => {
+    const MAX_SIZE = 5 * 1024 * 1024;
+    const allowedMimes = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/tiff",
+    ];
+    const rawExtensions = [".raw", ".nef", ".cr2", ".arw", ".dng"];
+
+    const mimeOK = allowedMimes.includes(file.type.toLowerCase());
+    const name = file.name.toLowerCase();
+    const extOK = rawExtensions.some((ext) => name.endsWith(ext));
+
+    if (!mimeOK && !extOK) {
+      return {
+        ok: false,
+        reason:
+          "Formato no soportado. Formatos permitidos: JPEG, PNG, GIF, TIFF, RAW.",
+      } as const;
+    }
+
+    if (file.size > MAX_SIZE) {
+      return { ok: false, reason: "El archivo excede el tamaño máximo de 5 MB." } as const;
+    }
+
+    return { ok: true } as const;
   };
 
   return (
@@ -302,6 +365,9 @@ export default function RecipeViewModal({
                   </div>
                 ))}
               </div>
+              {errorReemplazo && (
+                <p className="error-imagenes">{errorReemplazo}</p>
+              )}
             </div>
           )}
 
@@ -331,8 +397,30 @@ export default function RecipeViewModal({
             type="file"
             accept="image/*"
             multiple
-            onChange={(e) => setArchivosSeleccionados(e.target.files)}
+            onChange={(e) => {
+              const files = e.target.files;
+              if (!files || files.length === 0) {
+                setArchivosSeleccionados(null);
+                return;
+              }
+
+              // validar cada archivo con la función auxiliar
+              for (let i = 0; i < files.length; i++) {
+                const f = files[i];
+                const res = validarArchivo(f);
+                if (!res.ok) {
+                  setErrorImagenes(`${f.name}: ${res.reason}`);
+                  setArchivosSeleccionados(null);
+                  return;
+                }
+              }
+
+              setErrorImagenes(null);
+              setArchivosSeleccionados(files);
+            }}
           />
+
+          {errorImagenes && <p className="error-imagenes">{errorImagenes}</p>}
 
           {archivosSeleccionados && archivosSeleccionados.length > 0 && (
             <div className="lista-archivos">
@@ -401,6 +489,7 @@ export default function RecipeViewModal({
           </div>
         </div>
       )}
+
       {/* hidden input para reemplazar imagen */}
       <input
         ref={reemplazarInputRef}
@@ -412,6 +501,18 @@ export default function RecipeViewModal({
           if (!files || files.length === 0 || !imagenAReemplazar) return;
 
           const file = files[0];
+
+          // validar archivo antes de leer
+          const resultado = validarArchivo(file);
+          if (!resultado.ok) {
+            setErrorReemplazo(resultado.reason);
+            // limpiar input
+            if (reemplazarInputRef.current) reemplazarInputRef.current.value = "";
+            return;
+          }
+
+          setErrorReemplazo(null);
+
           const reader = new FileReader();
           reader.onload = (ev) => {
             const url = ev.target?.result as string;
@@ -424,8 +525,7 @@ export default function RecipeViewModal({
             onReemplazarImagen(receta.id, imagenAReemplazar, nuevaImagen);
             setImagenAReemplazar(null);
             // limpiar input
-            if (reemplazarInputRef.current)
-              reemplazarInputRef.current.value = "";
+            if (reemplazarInputRef.current) reemplazarInputRef.current.value = "";
           };
           reader.readAsDataURL(file);
         }}

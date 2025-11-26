@@ -458,6 +458,17 @@
   outline: 3px solid rgba(108, 99, 255, 0.12);
 }
 
+/* Mensajes de error relativos a imágenes */
+.error-imagenes {
+  color: #c0392b;
+  background: #fff5f5;
+  padding: 8px 10px;
+  border: 1px solid rgba(192, 57, 43, 0.08);
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
 /* Botones del modal de imágenes */
 .modal-imagen-botones {
   display: flex;
