@@ -248,14 +248,14 @@
 }
 
 .btn-agregar-imagen {
-  background: linear-gradient(90deg,#6c63ff,#8b6bff);
+  background: linear-gradient(90deg, #6c63ff, #8b6bff);
   color: white;
   border: none;
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 6px 18px rgba(108,99,255,0.12);
+  box-shadow: 0 6px 18px rgba(108, 99, 255, 0.12);
 }
 
 .btn-agregar-imagen:hover {
@@ -342,7 +342,7 @@
 
 .modal-imagen-contenido button {
   align-self: flex-end;
-  background: linear-gradient(90deg,#6c63ff,#8b6bff);
+  background: linear-gradient(90deg, #6c63ff, #8b6bff);
   color: white;
   border: none;
   padding: 8px 14px;
@@ -353,6 +353,86 @@
 
 .modal-imagen-contenido button:hover {
   transform: translateY(-2px);
+}
+
+/* Galería de imágenes */
+.galeria-imagenes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.galeria-item {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.galeria-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+}
+
+.galeria-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.galeria-item small {
+  display: block;
+  padding: 6px 8px;
+  background: #fafafa;
+  font-size: 11px;
+  color: #666;
+}
+
+/* Botones del modal de imágenes */
+.modal-imagen-botones {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-guardar-imagenes {
+  flex: 1;
+  background: linear-gradient(90deg, #6c63ff, #8b6bff);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-guardar-imagenes:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+}
+
+.btn-guardar-imagenes:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancelar-imagenes {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-cancelar-imagenes:hover {
+  background: #e8e8e8;
 }
 
 /* Ajustes para que el modal secundario se sienta como parte del mismo sistema visual */

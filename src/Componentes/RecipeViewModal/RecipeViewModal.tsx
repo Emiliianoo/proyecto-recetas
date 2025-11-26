@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./RecipeViewModal.css";
-import type { Receta } from "../../types";
+import type { Receta, ImagenReceta } from "../../types";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
 import Modal from "../Modal/Modal";
 
@@ -14,6 +14,7 @@ interface Props {
     notaId: string,
     nuevoTexto: string
   ) => void;
+  onGuardarImagenes: (recetaId: string, imagenes: ImagenReceta[]) => void;
 }
 
 export default function RecipeViewModal({
@@ -22,6 +23,7 @@ export default function RecipeViewModal({
   onGuardarNota,
   onEliminarNota,
   onActualizarNota,
+  onGuardarImagenes,
 }: Props) {
   const [notaTexto, setNotaTexto] = useState("");
   const [errorNota, setErrorNota] = useState("");
@@ -35,9 +37,11 @@ export default function RecipeViewModal({
   const [estaEditando, setEstaEditando] = useState(false);
   const [notaEditandoId, setNotaEditandoId] = useState<string | null>(null);
 
-  // Estado para modal de agregar imagen (UI-only)
+  // Estado para modal de agregar imagen
   const [mostrarModalImagen, setMostrarModalImagen] = useState(false);
-  const [archivosSeleccionados, setArchivosSeleccionados] = useState<FileList | null>(null);
+  const [archivosSeleccionados, setArchivosSeleccionados] =
+    useState<FileList | null>(null);
+  const [cargandoImagenes, setCargandoImagenes] = useState(false);
 
   if (!receta) return null;
 
@@ -98,6 +102,36 @@ export default function RecipeViewModal({
     setNotaTexto("");
   };
 
+  const manejarCargarImagenes = async () => {
+    if (!archivosSeleccionados || archivosSeleccionados.length === 0) return;
+
+    setCargandoImagenes(true);
+    const nuevasImagenes: ImagenReceta[] = [];
+
+    for (let i = 0; i < archivosSeleccionados.length; i++) {
+      const file = archivosSeleccionados[i];
+      const reader = new FileReader();
+
+      await new Promise<void>((resolve) => {
+        reader.onload = (e) => {
+          const url = e.target?.result as string;
+          nuevasImagenes.push({
+            id: crypto.randomUUID(),
+            url,
+            fecha: new Date().toISOString(),
+          });
+          resolve();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    onGuardarImagenes(receta.id, nuevasImagenes);
+    setCargandoImagenes(false);
+    setMostrarModalImagen(false);
+    setArchivosSeleccionados(null);
+  };
+
   return (
     <>
       <div className="view-overlay" onClick={cerrar}>
@@ -105,7 +139,13 @@ export default function RecipeViewModal({
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
           <div className="view-actions">
-            <button className="btn-agregar-imagen" onClick={() => { setArchivosSeleccionados(null); setMostrarModalImagen(true); }}>
+            <button
+              className="btn-agregar-imagen"
+              onClick={() => {
+                setArchivosSeleccionados(null);
+                setMostrarModalImagen(true);
+              }}
+            >
               Agregar Imagen
             </button>
           </div>
@@ -201,6 +241,23 @@ export default function RecipeViewModal({
             </div>
           </div>
 
+          {/* GALERÍA DE IMÁGENES */}
+          {receta.imagenes && receta.imagenes.length > 0 && (
+            <div className="view-section">
+              <h3>Imágenes de progreso</h3>
+              <div className="galeria-imagenes">
+                {receta.imagenes.map((img) => (
+                  <div key={img.id} className="galeria-item">
+                    <img src={img.url} alt="Progreso" />
+                    <small>
+                      {new Date(img.fecha).toLocaleDateString("es-MX")}
+                    </small>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <button className="view-close-btn" onClick={cerrar}>
             Cerrar
           </button>
@@ -214,10 +271,15 @@ export default function RecipeViewModal({
         onCancelar={() => setMostrarConfirmacion(false)}
       />
 
-      <Modal mostrar={mostrarModalImagen} cerrar={() => setMostrarModalImagen(false)}>
+      <Modal
+        mostrar={mostrarModalImagen}
+        cerrar={() => setMostrarModalImagen(false)}
+      >
         <div className="modal-imagen-contenido">
-          <h3>Agregar imágenes (vista)</h3>
-          <p className="nota-pequena">Por ahora solo se muestra el selector de archivos; las imágenes no se guardarán.</p>
+          <h3>Agregar imágenes</h3>
+          <p className="nota-pequena">
+            Selecciona una o varias imágenes para agregarlas a la receta.
+          </p>
           <input
             type="file"
             accept="image/*"
@@ -230,14 +292,32 @@ export default function RecipeViewModal({
               <p>Archivos seleccionados:</p>
               <ul>
                 {Array.from(archivosSeleccionados).map((f, idx) => (
-                  <li key={idx}>{f.name} ({Math.round(f.size / 1024)} KB)</li>
+                  <li key={idx}>
+                    {f.name} ({Math.round(f.size / 1024)} KB)
+                  </li>
                 ))}
               </ul>
             </div>
           )}
 
-          <div style={{ marginTop: 12 }}>
-            <button onClick={() => setMostrarModalImagen(false)}>Cerrar</button>
+          <div className="modal-imagen-botones">
+            <button
+              onClick={manejarCargarImagenes}
+              disabled={
+                !archivosSeleccionados ||
+                archivosSeleccionados.length === 0 ||
+                cargandoImagenes
+              }
+              className="btn-guardar-imagenes"
+            >
+              {cargandoImagenes ? "Cargando..." : "Guardar Imágenes"}
+            </button>
+            <button
+              onClick={() => setMostrarModalImagen(false)}
+              className="btn-cancelar-imagenes"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       </Modal>

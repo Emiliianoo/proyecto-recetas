@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import type { Receta, NotaReceta } from "./types";
+import type { Receta, NotaReceta, ImagenReceta } from "./types";
 import RecipeList from "./Componentes/RecipeList/RecipeList";
 import Modal from "./Componentes/Modal/Modal";
 import RecipeForm from "./Componentes/RecipeForm/RecipeForm";
@@ -104,6 +104,31 @@ function App() {
     );
   };
 
+  const manejarGuardarImagenes = (
+    recetaId: string,
+    imagenes: ImagenReceta[]
+  ) => {
+    setRecetas((prev) =>
+      prev.map((r) =>
+        r.id === recetaId
+          ? {
+              ...r,
+              imagenes: [...(r.imagenes ?? []), ...imagenes],
+            }
+          : r
+      )
+    );
+
+    setRecetaSeleccionada((prev) =>
+      prev && prev.id === recetaId
+        ? {
+            ...prev,
+            imagenes: [...(prev.imagenes ?? []), ...imagenes],
+          }
+        : prev
+    );
+  };
+
   return (
     <div className="contenedor-app">
       <div className="encabezado">
@@ -126,6 +151,7 @@ function App() {
         onGuardarNota={manejarGuardarNota}
         onEliminarNota={manejarEliminarNota}
         onActualizarNota={manejarActualizarNota}
+        onGuardarImagenes={manejarGuardarImagenes}
       />
     </div>
   );
