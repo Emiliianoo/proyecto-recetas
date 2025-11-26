@@ -1,13 +1,18 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react({
       babel: {
-        plugins: [['babel-plugin-react-compiler']],
+        plugins: [["babel-plugin-react-compiler"]],
       },
     }),
   ],
-})
+  // @ts-ignore
+  test: {
+    globals: true, // permite usar describe/test/expect sin importarlos
+    environment: "jsdom", // simula navegador
+    setupFiles: "./src/setupTests.ts", // archivo de setup global
+  },
+});
