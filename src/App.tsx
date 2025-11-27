@@ -40,7 +40,7 @@ function App() {
 
     // 2) Actualizar también la receta seleccionada (para que el modal se refresque)
     setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
+      prev?.id === recetaId
         ? { ...prev, notas: [...(prev.notas ?? []), nuevaNota] }
         : prev
     );
@@ -71,7 +71,7 @@ function App() {
     );
 
     setRecetaSeleccionada((prev) => {
-      if (!prev || prev.id !== recetaId) return prev;
+      if (prev?.id !== recetaId) return prev;
       return quitarNotaDeReceta(prev, notaId);
     });
   };
@@ -92,7 +92,7 @@ function App() {
     );
 
     setRecetaSeleccionada((prev) => {
-      if (!prev || prev.id !== recetaId) return prev;
+      if (prev?.id !== recetaId) return prev;
       return actualizarNotaDeReceta(prev, notaId, nuevoTexto, nuevaFecha);
     });
   };
