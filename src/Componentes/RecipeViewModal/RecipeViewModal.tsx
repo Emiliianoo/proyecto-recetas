@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./RecipeViewModal.css";
 import type { Receta } from "../../types";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
@@ -26,13 +26,23 @@ export default function RecipeViewModal({
   const [errorNota, setErrorNota] = useState("");
   const [mensajeExito, setMensajeExito] = useState("");
 
-  // Estado para eliminar
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [notaAEliminar, setNotaAEliminar] = useState<string | null>(null);
 
-  // Estado para el modo edición
   const [estaEditando, setEstaEditando] = useState(false);
   const [notaEditandoId, setNotaEditandoId] = useState<string | null>(null);
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (receta) {
+      // showModal() abre el dialog como modal nativo
+      dialogRef.current?.showModal();
+    } else {
+      // si receta queda null, cerramos el dialog
+      dialogRef.current?.close();
+    }
+  }, [receta]);
 
   if (!receta) return null;
 
@@ -95,27 +105,21 @@ export default function RecipeViewModal({
 
   return (
     <>
-      <div
-        className="view-overlay"
-        role="button"
-        tabIndex={0}
-        aria-label="Cerrar modal"
-        onClick={cerrar}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            cerrar();
-          }
+      <dialog
+        ref={dialogRef}
+        className="view-dialog"
+        onClose={cerrar}
+        onClick={(e) => {
+          // cerrar SOLO si clic en fondo (target === currentTarget)
+          if (e.target === e.currentTarget) cerrar();
         }}
+        aria-labelledby="view-title"
       >
-        <div
-          className="view-content"
-          role="dialog"
-          aria-modal="true"
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          <h2 className="view-title">{receta.nombre}</h2>
+        <div className="view-content">
+          <h2 id="view-title" className="view-title">
+            {receta.nombre}
+          </h2>
+
           <p className="view-subtitle">{receta.tipoCocina}</p>
 
           <div className="view-section">
@@ -136,7 +140,6 @@ export default function RecipeViewModal({
             </ol>
           </div>
 
-          {/* SECCIÓN DE NOTAS */}
           <div className="view-section">
             <h3>Notas</h3>
 
@@ -153,6 +156,7 @@ export default function RecipeViewModal({
                         >
                           Editar
                         </button>
+
                         <button
                           className="btn-eliminar-nota"
                           onClick={() => abrirConfirmacion(nota.id)}
@@ -171,9 +175,7 @@ export default function RecipeViewModal({
                 ))}
               </ul>
             ) : (
-              <p className="texto-sin-notas">
-                Aún no hay notas para esta receta.
-              </p>
+              <p>Aún no hay notas.</p>
             )}
 
             <textarea
@@ -212,15 +214,15 @@ export default function RecipeViewModal({
           <button className="view-close-btn" onClick={cerrar}>
             Cerrar
           </button>
-        </div>
-      </div>
 
-      <ConfirmModal
-        mostrar={mostrarConfirmacion}
-        mensaje="¿Eliminar esta nota definitivamente?"
-        onConfirmar={confirmarEliminacion}
-        onCancelar={() => setMostrarConfirmacion(false)}
-      />
+          <ConfirmModal
+            mostrar={mostrarConfirmacion}
+            mensaje="¿Eliminar esta nota definitivamente?"
+            onConfirmar={confirmarEliminacion}
+            onCancelar={() => setMostrarConfirmacion(false)}
+          />
+        </div>
+      </dialog>
     </>
   );
 }
