@@ -97,7 +97,6 @@ export default function RecipeViewModal({
     <>
       <div
         className="view-overlay"
-        role="button"
         tabIndex={0}
         onClick={cerrar}
         onKeyDown={(e) => {
