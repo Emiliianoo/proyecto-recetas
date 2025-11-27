@@ -106,7 +106,6 @@ export default function RecipeViewModal({
   return (
     <dialog
       ref={dialogRef}
-      role="dialog"
       className="view-dialog"
       onClose={cerrar}
       aria-labelledby="view-title"
