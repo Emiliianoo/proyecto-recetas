@@ -1,10 +1,10 @@
 import "./ConfirmModal.css";
 
 interface Props {
-  mostrar: boolean;
-  mensaje: string;
-  onConfirmar: () => void;
-  onCancelar: () => void;
+  readonly mostrar: boolean;
+  readonly mensaje: string;
+  readonly onConfirmar: () => void;
+  readonly onCancelar: () => void;
 }
 
 export default function ConfirmModal({
