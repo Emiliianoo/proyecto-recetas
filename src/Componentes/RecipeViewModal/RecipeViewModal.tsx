@@ -97,7 +97,6 @@ export default function RecipeViewModal({
     <>
       <div
         className="view-overlay"
-        tabIndex={0}
         onClick={cerrar}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") cerrar();
@@ -109,7 +108,6 @@ export default function RecipeViewModal({
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
-          tabIndex={1}
         >
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
@@ -136,7 +134,7 @@ export default function RecipeViewModal({
           <div className="view-section">
             <h3>Notas</h3>
 
-            {receta.notas && receta.notas.length ? (
+            {receta.notas?.length ? (
               <ul className="lista-notas">
                 {receta.notas.map((nota) => (
                   <li key={nota.id}>
