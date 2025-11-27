@@ -4,11 +4,11 @@ import type { Receta } from "../../types";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
 
 interface Props {
-  receta: Receta | null;
-  cerrar: () => void;
-  onGuardarNota: (recetaId: string, texto: string) => void;
-  onEliminarNota: (recetaId: string, notaId: string) => void;
-  onActualizarNota: (
+  readonly receta: Receta | null;
+  readonly cerrar: () => void;
+  readonly onGuardarNota: (recetaId: string, texto: string) => void;
+  readonly onEliminarNota: (recetaId: string, notaId: string) => void;
+  readonly onActualizarNota: (
     recetaId: string,
     notaId: string,
     nuevoTexto: string
@@ -95,8 +95,23 @@ export default function RecipeViewModal({
 
   return (
     <>
-      <div className="view-overlay" onClick={cerrar}>
-        <div className="view-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="view-overlay"
+        role="button"
+        tabIndex={0}
+        onClick={cerrar}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") cerrar();
+        }}
+      >
+        <div
+          className="view-content"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          tabIndex={1}
+        >
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
 

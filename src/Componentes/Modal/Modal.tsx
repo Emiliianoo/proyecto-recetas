@@ -1,9 +1,9 @@
 import "./Modal.css";
 
 interface Props {
-  mostrar: boolean;
-  cerrar: () => void;
-  children: React.ReactNode;
+  readonly mostrar: boolean;
+  readonly cerrar: () => void;
+  readonly children: React.ReactNode;
 }
 
 export default function Modal({ mostrar, cerrar, children }: Props) {
