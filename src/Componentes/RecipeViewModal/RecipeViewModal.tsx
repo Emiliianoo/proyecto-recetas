@@ -158,10 +158,19 @@ export default function RecipeViewModal({
 
     onGuardarImagenes(receta.id, nuevasImagenes);
     setCargandoImagenes(false);
-    setImagenExito("Imágenes subidas correctamente.");
-    setTimeout(() => setImagenExito(null), 3000);
+    mostrarExito("Imágenes subidas correctamente.");
     setMostrarModalImagen(false);
     setArchivosSeleccionados(null);
+  };
+
+  const cerrarLightbox = () => {
+    setMostrarLightbox(false);
+    setImagenActual(null);
+  };
+
+  const mostrarExito = (mensaje: string) => {
+    setImagenExito(mensaje);
+    setTimeout(() => setImagenExito(null), 3000);
   };
 
   return (
@@ -282,9 +291,18 @@ export default function RecipeViewModal({
                   <div
                     key={img.id}
                     className="galeria-item"
+                    role="button"
+                    tabIndex={0}
                     onClick={() => {
                       setImagenActual(img);
                       setMostrarLightbox(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setImagenActual(img);
+                        setMostrarLightbox(true);
+                      }
                     }}
                   >
                     <img src={img.url} alt="Progreso" />
@@ -416,22 +434,21 @@ export default function RecipeViewModal({
       {mostrarLightbox && imagenActual && (
         <div
           className="lightbox-overlay"
-          onClick={() => {
-            setMostrarLightbox(false);
-            setImagenActual(null);
+          role="button"
+          tabIndex={0}
+          onClick={cerrarLightbox}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              cerrarLightbox();
+            }
           }}
         >
           <div
             className="lightbox-content"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
           >
-            <button
-              className="lightbox-close"
-              onClick={() => {
-                setMostrarLightbox(false);
-                setImagenActual(null);
-              }}
-            >
+            <button className="lightbox-close" onClick={cerrarLightbox}>
               ✕
             </button>
             <img src={imagenActual.url} alt="Imagen expandida" />
@@ -480,8 +497,7 @@ export default function RecipeViewModal({
 
             onReemplazarImagen(receta.id, imagenAReemplazar, nuevaImagen);
             setImagenAReemplazar(null);
-            setImagenExito("Imagen reemplazada correctamente.");
-            setTimeout(() => setImagenExito(null), 3000);
+            mostrarExito("Imagen reemplazada correctamente.");
             // limpiar input
             if (reemplazarInputRef.current)
               reemplazarInputRef.current.value = "";
