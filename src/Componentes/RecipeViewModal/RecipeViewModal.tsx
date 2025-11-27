@@ -104,125 +104,120 @@ export default function RecipeViewModal({
   };
 
   return (
-    <>
-      <dialog
-        ref={dialogRef}
-        className="view-dialog"
-        onClose={cerrar}
-        onClick={(e) => {
-          // cerrar SOLO si clic en fondo (target === currentTarget)
-          if (e.target === e.currentTarget) cerrar();
-        }}
-        aria-labelledby="view-title"
-      >
-        <div className="view-content">
-          <h2 id="view-title" className="view-title">
-            {receta.nombre}
-          </h2>
+    <dialog
+      ref={dialogRef}
+      role="dialog"
+      className="view-dialog"
+      onClose={cerrar}
+      aria-labelledby="view-title"
+    >
+      <div className="view-content" onClick={(e) => e.stopPropagation()}>
+        <h2 id="view-title" className="view-title">
+          {receta.nombre}
+        </h2>
 
-          <p className="view-subtitle">{receta.tipoCocina}</p>
+        <p className="view-subtitle">{receta.tipoCocina}</p>
 
-          <div className="view-section">
-            <h3>Ingredientes</h3>
-            <ul>
-              {receta.ingredientes.map((ing) => (
-                <li key={ing.id}>{ing.nombre}</li>
+        <div className="view-section">
+          <h3>Ingredientes</h3>
+          <ul>
+            {receta.ingredientes.map((ing) => (
+              <li key={ing.id}>{ing.nombre}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="view-section">
+          <h3>Instrucciones</h3>
+          <ol>
+            {receta.instrucciones.map((inst) => (
+              <li key={inst.id}>{inst.texto}</li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="view-section">
+          <h3>Notas</h3>
+
+          {receta.notas?.length ? (
+            <ul className="lista-notas">
+              {receta.notas.map((nota) => (
+                <li key={nota.id}>
+                  <div className="nota-header">
+                    <p>{nota.texto}</p>
+                    <div className="nota-actions">
+                      <button
+                        className="btn-editar-nota"
+                        onClick={() => manejarEditarNota(nota.id, nota.texto)}
+                      >
+                        Editar
+                      </button>
+
+                      <button
+                        className="btn-eliminar-nota"
+                        onClick={() => abrirConfirmacion(nota.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                  <small>
+                    {new Date(nota.fecha).toLocaleString("es-MX", {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })}
+                  </small>
+                </li>
               ))}
             </ul>
-          </div>
+          ) : (
+            <p>Aún no hay notas.</p>
+          )}
 
-          <div className="view-section">
-            <h3>Instrucciones</h3>
-            <ol>
-              {receta.instrucciones.map((inst) => (
-                <li key={inst.id}>{inst.texto}</li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="view-section">
-            <h3>Notas</h3>
-
-            {receta.notas?.length ? (
-              <ul className="lista-notas">
-                {receta.notas.map((nota) => (
-                  <li key={nota.id}>
-                    <div className="nota-header">
-                      <p>{nota.texto}</p>
-                      <div className="nota-actions">
-                        <button
-                          className="btn-editar-nota"
-                          onClick={() => manejarEditarNota(nota.id, nota.texto)}
-                        >
-                          Editar
-                        </button>
-
-                        <button
-                          className="btn-eliminar-nota"
-                          onClick={() => abrirConfirmacion(nota.id)}
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </div>
-                    <small>
-                      {new Date(nota.fecha).toLocaleString("es-MX", {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </small>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>Aún no hay notas.</p>
-            )}
-
-            <textarea
-              className="nota-textarea"
-              placeholder={
-                estaEditando
-                  ? "Edita el texto de la nota..."
-                  : "Escribe una nota sobre esta receta..."
-              }
-              value={notaTexto}
-              onChange={(e) => setNotaTexto(e.target.value)}
-            />
-
-            {errorNota && <p className="error-nota">{errorNota}</p>}
-            {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
-
-            <div className="nota-botones">
-              <button
-                className="btn-guardar-nota"
-                onClick={manejarGuardarONActualizar}
-              >
-                {estaEditando ? "Actualizar nota" : "Guardar nota"}
-              </button>
-
-              {estaEditando && (
-                <button
-                  className="btn-cancelar-edicion"
-                  onClick={manejarCancelarEdicion}
-                >
-                  Cancelar edición
-                </button>
-              )}
-            </div>
-          </div>
-
-          <button className="view-close-btn" onClick={cerrar}>
-            Cerrar
-          </button>
-
-          <ConfirmModal
-            mostrar={mostrarConfirmacion}
-            mensaje="¿Eliminar esta nota definitivamente?"
-            onConfirmar={confirmarEliminacion}
-            onCancelar={() => setMostrarConfirmacion(false)}
+          <textarea
+            className="nota-textarea"
+            placeholder={
+              estaEditando
+                ? "Edita el texto de la nota..."
+                : "Escribe una nota sobre esta receta..."
+            }
+            value={notaTexto}
+            onChange={(e) => setNotaTexto(e.target.value)}
           />
+
+          {errorNota && <p className="error-nota">{errorNota}</p>}
+          {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
+
+          <div className="nota-botones">
+            <button
+              className="btn-guardar-nota"
+              onClick={manejarGuardarONActualizar}
+            >
+              {estaEditando ? "Actualizar nota" : "Guardar nota"}
+            </button>
+
+            {estaEditando && (
+              <button
+                className="btn-cancelar-edicion"
+                onClick={manejarCancelarEdicion}
+              >
+                Cancelar edición
+              </button>
+            )}
+          </div>
         </div>
-      </dialog>
-    </>
+
+        <button className="view-close-btn" onClick={cerrar}>
+          Cerrar
+        </button>
+
+        <ConfirmModal
+          mostrar={mostrarConfirmacion}
+          mensaje="¿Eliminar esta nota definitivamente?"
+          onConfirmar={confirmarEliminacion}
+          onCancelar={() => setMostrarConfirmacion(false)}
+        />
+      </div>
+    </dialog>
   );
 }
