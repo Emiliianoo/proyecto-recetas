@@ -46,26 +46,34 @@ function App() {
     );
   };
 
+  const quitarNotaDeReceta = (receta: Receta, notaId: string): Receta => {
+    const notasActualizadas = (receta.notas ?? []).filter(
+      (n) => n.id !== notaId
+    );
+    return { ...receta, notas: notasActualizadas };
+  };
+
+  const actualizarNotaDeReceta = (
+    receta: Receta,
+    notaId: string,
+    nuevoTexto: string,
+    nuevaFecha: string
+  ): Receta => {
+    const notasActualizadas = (receta.notas ?? []).map((n) =>
+      n.id === notaId ? { ...n, texto: nuevoTexto, fecha: nuevaFecha } : n
+    );
+    return { ...receta, notas: notasActualizadas };
+  };
+
   const manejarEliminarNota = (recetaId: string, notaId: string) => {
     setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              notas: (r.notas ?? []).filter((n) => n.id !== notaId),
-            }
-          : r
-      )
+      prev.map((r) => (r.id === recetaId ? quitarNotaDeReceta(r, notaId) : r))
     );
 
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? {
-            ...prev,
-            notas: (prev.notas ?? []).filter((n) => n.id !== notaId),
-          }
-        : prev
-    );
+    setRecetaSeleccionada((prev) => {
+      if (!prev || prev.id !== recetaId) return prev;
+      return quitarNotaDeReceta(prev, notaId);
+    });
   };
 
   const manejarActualizarNota = (
@@ -78,30 +86,15 @@ function App() {
     setRecetas((prev) =>
       prev.map((r) =>
         r.id === recetaId
-          ? {
-              ...r,
-              notas: (r.notas ?? []).map((n) =>
-                n.id === notaId
-                  ? { ...n, texto: nuevoTexto, fecha: nuevaFecha }
-                  : n
-              ),
-            }
+          ? actualizarNotaDeReceta(r, notaId, nuevoTexto, nuevaFecha)
           : r
       )
     );
 
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? {
-            ...prev,
-            notas: (prev.notas ?? []).map((n) =>
-              n.id === notaId
-                ? { ...n, texto: nuevoTexto, fecha: nuevaFecha }
-                : n
-            ),
-          }
-        : prev
-    );
+    setRecetaSeleccionada((prev) => {
+      if (!prev || prev.id !== recetaId) return prev;
+      return actualizarNotaDeReceta(prev, notaId, nuevoTexto, nuevaFecha);
+    });
   };
 
   return (
