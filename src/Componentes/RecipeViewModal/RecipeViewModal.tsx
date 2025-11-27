@@ -97,9 +97,15 @@ export default function RecipeViewModal({
     <>
       <div
         className="view-overlay"
+        role="button"
+        tabIndex={0}
+        aria-label="Cerrar modal"
         onClick={cerrar}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") cerrar();
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            cerrar();
+          }
         }}
       >
         <div
