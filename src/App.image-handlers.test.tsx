@@ -10,6 +10,30 @@ import type { Receta, ImagenReceta } from "./types";
  */
 
 describe("App Image Handlers", () => {
+  // Helpers para crear objetos de prueba
+  const crearReceta = (
+    id: string,
+    nombre: string,
+    imagenes: ImagenReceta[] = []
+  ): Receta => ({
+    id,
+    nombre,
+    tipoCocina: "Italiana",
+    ingredientes: [],
+    instrucciones: [],
+    notas: [],
+    imagenes,
+  });
+
+  const crearImagen = (
+    id: string,
+    url: string = "data:image/jpeg;base64,test"
+  ): ImagenReceta => ({
+    id,
+    url,
+    fecha: new Date().toISOString(),
+  });
+
   // Helper que aplica una transformación a las imágenes de la receta y sincroniza recetaSeleccionada
   const actualizarRecetas = (
     recetaId: string,
@@ -92,26 +116,8 @@ describe("App Image Handlers", () => {
 
   describe("manejarGuardarImagenes", () => {
     it("Debe agregar imágenes a la receta correcta", () => {
-      const recetas: Receta[] = [
-        {
-          id: "1",
-          nombre: "Pasta",
-          tipoCocina: "Italiana",
-          ingredientes: [],
-          instrucciones: [],
-          notas: [],
-          imagenes: [],
-        },
-      ];
-
-      const nuevasImagenes: ImagenReceta[] = [
-        {
-          id: "img1",
-          url: "data:image/jpeg;base64,test",
-          fecha: new Date().toISOString(),
-        },
-      ];
-
+      const recetas = [crearReceta("1", "Pasta")];
+      const nuevasImagenes = [crearImagen("img1")];
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -131,24 +137,8 @@ describe("App Image Handlers", () => {
     });
 
     it("Debe actualizar recetaSeleccionada cuando es la misma receta", () => {
-      const receta: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [],
-      };
-
-      const nuevasImagenes: ImagenReceta[] = [
-        {
-          id: "img1",
-          url: "data:image/jpeg;base64,test",
-          fecha: new Date().toISOString(),
-        },
-      ];
-
+      const receta = crearReceta("1", "Pasta");
+      const nuevasImagenes = [crearImagen("img1")];
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -167,34 +157,9 @@ describe("App Image Handlers", () => {
     });
 
     it("No debe modificar recetaSeleccionada si es otra receta", () => {
-      const receta1: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [],
-      };
-
-      const receta2: Receta = {
-        id: "2",
-        nombre: "Pizza",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [],
-      };
-
-      const nuevasImagenes: ImagenReceta[] = [
-        {
-          id: "img1",
-          url: "data:image/jpeg;base64,test",
-          fecha: new Date().toISOString(),
-        },
-      ];
-
+      const receta1 = crearReceta("1", "Pasta");
+      const receta2 = crearReceta("2", "Pizza");
+      const nuevasImagenes = [crearImagen("img1")];
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -211,34 +176,12 @@ describe("App Image Handlers", () => {
     });
 
     it("Debe agregar múltiples imágenes a la vez", () => {
-      const receta: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [],
-      };
-
-      const nuevasImagenes: ImagenReceta[] = [
-        {
-          id: "img1",
-          url: "data:image/jpeg;base64,test1",
-          fecha: new Date().toISOString(),
-        },
-        {
-          id: "img2",
-          url: "data:image/jpeg;base64,test2",
-          fecha: new Date().toISOString(),
-        },
-        {
-          id: "img3",
-          url: "data:image/jpeg;base64,test3",
-          fecha: new Date().toISOString(),
-        },
+      const receta = crearReceta("1", "Pasta");
+      const nuevasImagenes = [
+        crearImagen("img1", "data:image/jpeg;base64,test1"),
+        crearImagen("img2", "data:image/jpeg;base64,test2"),
+        crearImagen("img3", "data:image/jpeg;base64,test3"),
       ];
-
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -256,38 +199,20 @@ describe("App Image Handlers", () => {
     });
 
     it("Debe preservar imágenes existentes al agregar nuevas", () => {
-      const recetaConImagenes: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img-old",
-            url: "data:image/jpeg;base64,old",
-            fecha: new Date().toISOString(),
-          },
-        ],
-      };
-
-      const nuevasImagenes: ImagenReceta[] = [
-        {
-          id: "img-new",
-          url: "data:image/jpeg;base64,new",
-          fecha: new Date().toISOString(),
-        },
+      const receta = crearReceta("1", "Pasta", [
+        crearImagen("img-old", "data:image/jpeg;base64,old"),
+      ]);
+      const nuevasImagenes = [
+        crearImagen("img-new", "data:image/jpeg;base64,new"),
       ];
-
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
       mockManejarGuardarImagenes(
         "1",
         nuevasImagenes,
-        [recetaConImagenes],
-        recetaConImagenes,
+        [receta],
+        receta,
         setRecetas,
         setRecetaSeleccionada
       );
@@ -303,27 +228,10 @@ describe("App Image Handlers", () => {
 
   describe("manejarEliminarImagen", () => {
     it("Debe eliminar imagen específica por ID", () => {
-      const receta: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img1",
-            url: "data:image/jpeg;base64,test1",
-            fecha: new Date().toISOString(),
-          },
-          {
-            id: "img2",
-            url: "data:image/jpeg;base64,test2",
-            fecha: new Date().toISOString(),
-          },
-        ],
-      };
-
+      const receta = crearReceta("1", "Pasta", [
+        crearImagen("img1", "data:image/jpeg;base64,test1"),
+        crearImagen("img2", "data:image/jpeg;base64,test2"),
+      ]);
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -342,38 +250,12 @@ describe("App Image Handlers", () => {
     });
 
     it("No debe afectar otras recetas al eliminar imagen", () => {
-      const receta1: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img1",
-            url: "data:image/jpeg;base64,test1",
-            fecha: new Date().toISOString(),
-          },
-        ],
-      };
-
-      const receta2: Receta = {
-        id: "2",
-        nombre: "Pizza",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img2",
-            url: "data:image/jpeg;base64,test2",
-            fecha: new Date().toISOString(),
-          },
-        ],
-      };
-
+      const receta1 = crearReceta("1", "Pasta", [
+        crearImagen("img1", "data:image/jpeg;base64,test1"),
+      ]);
+      const receta2 = crearReceta("2", "Pizza", [
+        crearImagen("img2", "data:image/jpeg;base64,test2"),
+      ]);
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -396,33 +278,19 @@ describe("App Image Handlers", () => {
 
   describe("manejarReemplazarImagen", () => {
     it("Debe reemplazar imagen por ID manteniendo su posición", () => {
-      const receta: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img1",
-            url: "data:image/jpeg;base64,old1",
-            fecha: new Date(2025, 0, 1).toISOString(),
-          },
-          {
-            id: "img2",
-            url: "data:image/jpeg;base64,old2",
-            fecha: new Date(2025, 0, 2).toISOString(),
-          },
-        ],
-      };
-
-      const nuevaImagen: ImagenReceta = {
-        id: "img1",
-        url: "data:image/jpeg;base64,new",
-        fecha: new Date().toISOString(),
-      };
-
+      const receta = crearReceta("1", "Pasta", [
+        {
+          id: "img1",
+          url: "data:image/jpeg;base64,old1",
+          fecha: new Date(2025, 0, 1).toISOString(),
+        },
+        {
+          id: "img2",
+          url: "data:image/jpeg;base64,old2",
+          fecha: new Date(2025, 0, 2).toISOString(),
+        },
+      ]);
+      const nuevaImagen = crearImagen("img1", "data:image/jpeg;base64,new");
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -447,29 +315,16 @@ describe("App Image Handlers", () => {
     });
 
     it("Debe actualizar la fecha al reemplazar imagen", () => {
-      const receta: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img1",
-            url: "data:image/jpeg;base64,old",
-            fecha: new Date(2025, 0, 1).toISOString(),
-          },
-        ],
-      };
-
+      const receta = crearReceta("1", "Pasta", [
+        {
+          id: "img1",
+          url: "data:image/jpeg;base64,old",
+          fecha: new Date(2025, 0, 1).toISOString(),
+        },
+      ]);
       const nuevaFecha = new Date().toISOString();
-      const nuevaImagen: ImagenReceta = {
-        id: "img1",
-        url: "data:image/jpeg;base64,new",
-        fecha: nuevaFecha,
-      };
-
+      const nuevaImagen = crearImagen("img1", "data:image/jpeg;base64,new");
+      Object.assign(nuevaImagen, { fecha: nuevaFecha });
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -488,33 +343,11 @@ describe("App Image Handlers", () => {
     });
 
     it("Debe mantener IDs de otras imágenes al reemplazar una", () => {
-      const receta: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img1",
-            url: "data:image/jpeg;base64,old1",
-            fecha: new Date().toISOString(),
-          },
-          {
-            id: "img2",
-            url: "data:image/jpeg;base64,old2",
-            fecha: new Date().toISOString(),
-          },
-        ],
-      };
-
-      const nuevaImagen: ImagenReceta = {
-        id: "img1",
-        url: "data:image/jpeg;base64,new",
-        fecha: new Date().toISOString(),
-      };
-
+      const receta = crearReceta("1", "Pasta", [
+        crearImagen("img1", "data:image/jpeg;base64,old1"),
+        crearImagen("img2", "data:image/jpeg;base64,old2"),
+      ]);
+      const nuevaImagen = crearImagen("img1", "data:image/jpeg;base64,new");
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
@@ -534,44 +367,13 @@ describe("App Image Handlers", () => {
     });
 
     it("No debe afectar otras recetas al reemplazar imagen", () => {
-      const receta1: Receta = {
-        id: "1",
-        nombre: "Pasta",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img1",
-            url: "data:image/jpeg;base64,old",
-            fecha: new Date().toISOString(),
-          },
-        ],
-      };
-
-      const receta2: Receta = {
-        id: "2",
-        nombre: "Pizza",
-        tipoCocina: "Italiana",
-        ingredientes: [],
-        instrucciones: [],
-        notas: [],
-        imagenes: [
-          {
-            id: "img2",
-            url: "data:image/jpeg;base64,pizza",
-            fecha: new Date().toISOString(),
-          },
-        ],
-      };
-
-      const nuevaImagen: ImagenReceta = {
-        id: "img1",
-        url: "data:image/jpeg;base64,new",
-        fecha: new Date().toISOString(),
-      };
-
+      const receta1 = crearReceta("1", "Pasta", [
+        crearImagen("img1", "data:image/jpeg;base64,old"),
+      ]);
+      const receta2 = crearReceta("2", "Pizza", [
+        crearImagen("img2", "data:image/jpeg;base64,pizza"),
+      ]);
+      const nuevaImagen = crearImagen("img1", "data:image/jpeg;base64,new");
       const setRecetas = vi.fn();
       const setRecetaSeleccionada = vi.fn();
 
