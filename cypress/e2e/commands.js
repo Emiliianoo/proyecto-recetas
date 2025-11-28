@@ -22,7 +22,9 @@ Cypress.Commands.add('createRecipe', ({nombre,tipo,ingredientes, instrucciones})
   cy.get('button[class = "btn-guardar"]').click()
 })
 
-Cypress.Commands.add("addNote", (text) => {
-  cy.get("textarea").type(text)
+Cypress.Commands.add('addNote', ({text}) => {
+  if(text !== null){
+    cy.get("textarea").type(text)
+  }
   cy.get('button[class="btn-guardar-nota"]').click()
 })

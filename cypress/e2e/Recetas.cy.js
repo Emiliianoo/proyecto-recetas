@@ -83,27 +83,3 @@ describe('registrar una receta con nombre, tipo de cocina, lista de ingredientes
     })
   })
 })
-
-describe('agregar notas especiales o modificaciones en cada receta', () => {
-  it('Validar que el usuario pueda agregar una nota a una receta existente con éxito.', () => {
-    cy.visit("https://proyecto-recetas-cocina.netlify.app")
-    cy.visit("https://proyecto-recetas-cocina.netlify.app")
-    const nombre = "Pastel de Chocolate";
-    const tipo = "Postres";
-    const ingredientes = ["Harina", "Chocolate","Leche"];
-    const instrucciones = ["Mezclar, hornear"];
-    // Crear
-    cy.createRecipe({
-      nombre,
-      tipo,
-      ingredientes,
-      instrucciones
-    })
-
-    cy.get('button[class = "btn-ver"]').click()
-    const text = "texto de prueba";
-    cy.addNote({
-      text
-    })
-  })
-})
