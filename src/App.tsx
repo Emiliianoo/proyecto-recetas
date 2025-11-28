@@ -14,6 +14,20 @@ function App() {
     null
   );
 
+  // Helper para actualizar recetas en ambos estados (recetas y recetaSeleccionada)
+  const actualizarReceta = (
+    recetaId: string,
+    transformar: (receta: Receta) => Receta
+  ) => {
+    setRecetas((prev) =>
+      prev.map((r) => (r.id === recetaId ? transformar(r) : r))
+    );
+
+    setRecetaSeleccionada((prev) =>
+      prev && prev.id === recetaId ? transformar(prev) : prev
+    );
+  };
+
   const agregarReceta = (nuevaReceta: Receta) => {
     setRecetas((prev) => [...prev, nuevaReceta]);
     setMostrarModal(false);
@@ -26,46 +40,17 @@ function App() {
       fecha: new Date().toISOString(),
     };
 
-    // 1) Actualizar la receta dentro del arreglo de recetas
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              notas: [...(r.notas ?? []), nuevaNota],
-            }
-          : r
-      )
-    );
-
-    // 2) Actualizar también la receta seleccionada (para que el modal se refresque)
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? { ...prev, notas: [...(prev.notas ?? []), nuevaNota] }
-        : prev
-    );
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      notas: [...(r.notas ?? []), nuevaNota],
+    }));
   };
 
   const manejarEliminarNota = (recetaId: string, notaId: string) => {
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              notas: (r.notas ?? []).filter((n) => n.id !== notaId),
-            }
-          : r
-      )
-    );
-
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? {
-            ...prev,
-            notas: (prev.notas ?? []).filter((n) => n.id !== notaId),
-          }
-        : prev
-    );
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      notas: (r.notas ?? []).filter((n) => n.id !== notaId),
+    }));
   };
 
   const manejarActualizarNota = (
@@ -75,82 +60,29 @@ function App() {
   ) => {
     const nuevaFecha = new Date().toISOString();
 
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              notas: (r.notas ?? []).map((n) =>
-                n.id === notaId
-                  ? { ...n, texto: nuevoTexto, fecha: nuevaFecha }
-                  : n
-              ),
-            }
-          : r
-      )
-    );
-
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? {
-            ...prev,
-            notas: (prev.notas ?? []).map((n) =>
-              n.id === notaId
-                ? { ...n, texto: nuevoTexto, fecha: nuevaFecha }
-                : n
-            ),
-          }
-        : prev
-    );
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      notas: (r.notas ?? []).map((n) =>
+        n.id === notaId ? { ...n, texto: nuevoTexto, fecha: nuevaFecha } : n
+      ),
+    }));
   };
 
   const manejarGuardarImagenes = (
     recetaId: string,
     imagenes: ImagenReceta[]
   ) => {
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              imagenes: [...(r.imagenes ?? []), ...imagenes],
-            }
-          : r
-      )
-    );
-
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? {
-            ...prev,
-            imagenes: [...(prev.imagenes ?? []), ...imagenes],
-          }
-        : prev
-    );
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      imagenes: [...(r.imagenes ?? []), ...imagenes],
+    }));
   };
 
   const manejarEliminarImagen = (recetaId: string, imagenId: string) => {
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              imagenes: (r.imagenes ?? []).filter((img) => img.id !== imagenId),
-            }
-          : r
-      )
-    );
-
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? {
-            ...prev,
-            imagenes: (prev.imagenes ?? []).filter(
-              (img) => img.id !== imagenId
-            ),
-          }
-        : prev
-    );
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      imagenes: (r.imagenes ?? []).filter((img) => img.id !== imagenId),
+    }));
   };
 
   const manejarReemplazarImagen = (
@@ -158,33 +90,14 @@ function App() {
     imagenId: string,
     nuevaImagen: ImagenReceta
   ) => {
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              imagenes: (r.imagenes ?? []).map((img) =>
-                img.id === imagenId
-                  ? { ...img, url: nuevaImagen.url, fecha: nuevaImagen.fecha }
-                  : img
-              ),
-            }
-          : r
-      )
-    );
-
-    setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId
-        ? {
-            ...prev,
-            imagenes: (prev.imagenes ?? []).map((img) =>
-              img.id === imagenId
-                ? { ...img, url: nuevaImagen.url, fecha: nuevaImagen.fecha }
-                : img
-            ),
-          }
-        : prev
-    );
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      imagenes: (r.imagenes ?? []).map((img) =>
+        img.id === imagenId
+          ? { ...img, url: nuevaImagen.url, fecha: nuevaImagen.fecha }
+          : img
+      ),
+    }));
   };
 
   return (

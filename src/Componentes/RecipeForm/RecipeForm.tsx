@@ -104,9 +104,10 @@ export default function RecipeForm({ agregarReceta }: Props) {
       />
 
       {/* Ingredientes */}
-      <label>Ingredientes</label>
+      <label htmlFor="ingredientes">Ingredientes</label>
       <div className="fila-agregar">
         <input
+          id="ingredientes"
           type="text"
           value={nuevoIngrediente}
           onChange={(e) => setNuevoIngrediente(e.target.value)}
@@ -122,9 +123,10 @@ export default function RecipeForm({ agregarReceta }: Props) {
       />
 
       {/* Instrucciones */}
-      <label>Instrucciones</label>
+      <label htmlFor="instrucciones">Instrucciones</label>
       <div className="fila-agregar">
         <input
+          id="instrucciones"
           type="text"
           value={nuevaInstruccion}
           onChange={(e) => setNuevaInstruccion(e.target.value)}
