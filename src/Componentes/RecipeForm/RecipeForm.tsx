@@ -4,7 +4,7 @@ import "./RecipeForm.css";
 import IngredientList from "../IngredientList/IngredientList";
 
 interface Props {
-  agregarReceta: (receta: Receta) => void;
+  readonly agregarReceta: (receta: Receta) => void;
 }
 
 export default function RecipeForm({ agregarReceta }: Props) {

@@ -6,18 +6,18 @@ import Modal from "../Modal/Modal";
 import { validateImageFile } from "../../validation/imageValidation";
 
 interface Props {
-  receta: Receta | null;
-  cerrar: () => void;
-  onGuardarNota: (recetaId: string, texto: string) => void;
-  onEliminarNota: (recetaId: string, notaId: string) => void;
-  onActualizarNota: (
+  readonly receta: Receta | null;
+  readonly cerrar: () => void;
+  readonly onGuardarNota: (recetaId: string, texto: string) => void;
+  readonly onEliminarNota: (recetaId: string, notaId: string) => void;
+  readonly onActualizarNota: (
     recetaId: string,
     notaId: string,
     nuevoTexto: string
   ) => void;
-  onGuardarImagenes: (recetaId: string, imagenes: ImagenReceta[]) => void;
-  onEliminarImagen: (recetaId: string, imagenId: string) => void;
-  onReemplazarImagen: (
+  readonly onGuardarImagenes: (recetaId: string, imagenes: ImagenReceta[]) => void;
+  readonly onEliminarImagen: (recetaId: string, imagenId: string) => void;
+  readonly onReemplazarImagen: (
     recetaId: string,
     imagenId: string,
     nuevaImagen: ImagenReceta
@@ -123,10 +123,9 @@ export default function RecipeViewModal({
   };
 
   const manejarCargarImagenes = async () => {
-    if (!archivosSeleccionados || archivosSeleccionados.length === 0) return;
+    if (!archivosSeleccionados?.length) return;
 
-    for (let i = 0; i < archivosSeleccionados.length; i++) {
-      const f = archivosSeleccionados[i];
+    for (const f of archivosSeleccionados) {
       const validation = validateImageFile(f);
       if (!validation.ok) {
         setErrorImagenes(`${f.name}: ${validation.reason}`);
@@ -138,8 +137,7 @@ export default function RecipeViewModal({
     setCargandoImagenes(true);
     const nuevasImagenes: ImagenReceta[] = [];
 
-    for (let i = 0; i < archivosSeleccionados.length; i++) {
-      const file = archivosSeleccionados[i];
+    for (const file of archivosSeleccionados) {
       const reader = new FileReader();
 
       await new Promise<void>((resolve) => {
@@ -175,27 +173,11 @@ export default function RecipeViewModal({
 
   return (
     <>
-      <div
-        className="view-overlay"
-        role="dialog"
-        aria-modal={true}
-        aria-label={`Vista de receta ${receta.nombre}`}
-        tabIndex={0}
-        onClick={cerrar}
-        onKeyDown={(e) => {
-          // Cerrar con Escape, Enter o Espacio para accesibilidad
-          if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            cerrar();
-          }
-        }}
-      >
+      <div className="view-overlay" onClick={cerrar}>
         <div
           className="view-content"
           role="document"
-          tabIndex={-1}
           onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
         >
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
@@ -233,7 +215,7 @@ export default function RecipeViewModal({
           <div className="view-section">
             <h3>Notas</h3>
 
-            {receta.notas && receta.notas.length ? (
+            {receta.notas?.length ? (
               <ul className="lista-notas">
                 {receta.notas.map((nota) => (
                   <li key={nota.id}>
@@ -307,53 +289,62 @@ export default function RecipeViewModal({
             <div className="view-section">
               <h3>Imágenes de progreso</h3>
               <div className="galeria-imagenes">
-                {receta.imagenes.map((img) => (
-                  <div
+                {receta.imagenes?.map((img) => (
+                  <button
                     key={img.id}
                     className="galeria-item"
-                    role="button"
-                    tabIndex={0}
                     onClick={() => {
                       setImagenActual(img);
                       setMostrarLightbox(true);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setImagenActual(img);
-                        setMostrarLightbox(true);
-                      }
                     }}
                   >
                     <img src={img.url} alt="Progreso" />
                     <small>
                       {new Date(img.fecha).toLocaleDateString("es-MX")}
                     </small>
-                    <button
+                    <div
                       className="galeria-btn-eliminar"
+                      role="button"
+                      tabIndex={0}
                       onClick={(e) => {
                         e.stopPropagation();
                         if (window.confirm("¿Deseas eliminar esta imagen?")) {
                           onEliminarImagen(receta.id, img.id);
                         }
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          if (window.confirm("¿Deseas eliminar esta imagen?")) {
+                            onEliminarImagen(receta.id, img.id);
+                          }
+                        }
+                      }}
                       title="Eliminar imagen"
                     >
                       ✕
-                    </button>
-                    <button
+                    </div>
+                    <div
                       className="galeria-btn-reemplazar"
+                      role="button"
+                      tabIndex={0}
                       onClick={(e) => {
                         e.stopPropagation();
                         setImagenAReemplazar(img.id);
-                        // trigger hidden input
                         reemplazarInputRef.current?.click();
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setImagenAReemplazar(img.id);
+                          reemplazarInputRef.current?.click();
+                        }
                       }}
                       title="Reemplazar imagen"
                     >
                       ↻
-                    </button>
-                  </div>
+                    </div>
+                  </button>
                 ))}
               </div>
               {errorReemplazo && (
@@ -391,14 +382,13 @@ export default function RecipeViewModal({
             multiple
             onChange={(e) => {
               const files = e.target.files;
-              if (!files || files.length === 0) {
+              if (!files?.length) {
                 setArchivosSeleccionados(null);
                 return;
               }
 
               // validar cada archivo con la función centralizada
-              for (let i = 0; i < files.length; i++) {
-                const f = files[i];
+              for (const f of files) {
                 const res = validateImageFile(f);
                 if (!res.ok) {
                   setErrorImagenes(`${f.name}: ${res.reason}`);
@@ -414,12 +404,12 @@ export default function RecipeViewModal({
 
           {errorImagenes && <p className="error-imagenes">{errorImagenes}</p>}
 
-          {archivosSeleccionados && archivosSeleccionados.length > 0 && (
+          {archivosSeleccionados?.length && (
             <div className="lista-archivos">
               <p>Archivos seleccionados:</p>
               <ul>
-                {Array.from(archivosSeleccionados).map((f, idx) => (
-                  <li key={idx}>
+                {Array.from(archivosSeleccionados).map((f) => (
+                  <li key={f.name}>
                     {f.name} ({Math.round(f.size / 1024)} KB)
                   </li>
                 ))}
@@ -452,24 +442,8 @@ export default function RecipeViewModal({
 
       {/* Lightbox para expandir imágenes */}
       {mostrarLightbox && imagenActual && (
-        <div
-          className="lightbox-overlay"
-          role="button"
-          tabIndex={0}
-          onClick={cerrarLightbox}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") {
-              cerrarLightbox();
-            }
-          }}
-        >
-          <div
-            className="lightbox-content"
-            role="document"
-            tabIndex={-1}
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-          >
+        <div className="lightbox-overlay" onClick={cerrarLightbox}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
             <button className="lightbox-close" onClick={cerrarLightbox}>
               ✕
             </button>

@@ -24,7 +24,7 @@ function App() {
     );
 
     setRecetaSeleccionada((prev) =>
-      prev && prev.id === recetaId ? transformar(prev) : prev
+      prev?.id === recetaId ? transformar(prev as Receta) : prev
     );
   };
 

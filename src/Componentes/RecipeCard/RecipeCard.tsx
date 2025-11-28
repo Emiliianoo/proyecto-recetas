@@ -2,8 +2,8 @@ import type { Receta } from "../../types";
 import "./RecipeCard.css";
 
 interface Props {
-  receta: Receta;
-  onVer: (receta: Receta) => void;
+  readonly receta: Receta;
+  readonly onVer: (receta: Receta) => void;
 }
 
 export default function RecipeCard({ receta, onVer }: Props) {

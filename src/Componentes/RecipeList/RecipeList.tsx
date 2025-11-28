@@ -3,8 +3,8 @@ import RecipeCard from "../RecipeCard/RecipeCard";
 import "./RecipeList.css";
 
 interface Props {
-  recetas: Receta[];
-  onVer: (receta: Receta) => void;
+  readonly recetas: Receta[];
+  readonly onVer: (receta: Receta) => void;
 }
 
 export default function RecipeList({ recetas, onVer }: Props) {

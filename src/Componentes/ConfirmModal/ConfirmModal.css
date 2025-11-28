@@ -48,10 +48,16 @@
 }
 
 .confirm-btn.eliminar {
-  background: #e74c3c;
-  color: white;
+  background: #b22222; /* darker red for better contrast */
+  color: #ffffff;
 }
 
 .confirm-btn.eliminar:hover {
-  background: #c0392b;
+  background: #922016; /* slightly darker on hover */
+}
+
+/* Visible focus for keyboard users */
+.confirm-btn:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 2px;
 }
