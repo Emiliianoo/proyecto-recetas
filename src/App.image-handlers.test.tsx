@@ -10,7 +10,27 @@ import type { Receta, ImagenReceta } from "./types";
  */
 
 describe("App Image Handlers", () => {
-  // Mock handlers simulando la lógica de App.tsx
+  // Helper que aplica una transformación a las imágenes de la receta y sincroniza recetaSeleccionada
+  const actualizarRecetas = (
+    recetaId: string,
+    transformar: (imagenes: ImagenReceta[]) => ImagenReceta[],
+    recetas: Receta[],
+    recetaSeleccionada: Receta | null,
+    setRecetas: (recetas: Receta[]) => void,
+    setRecetaSeleccionada: (receta: Receta | null) => void
+  ) => {
+    const updatedRecetas = recetas.map((r) =>
+      r.id === recetaId ? { ...r, imagenes: transformar(r.imagenes || []) } : r
+    );
+    setRecetas(updatedRecetas);
+
+    if (recetaSeleccionada?.id === recetaId) {
+      setRecetaSeleccionada({
+        ...recetaSeleccionada,
+        imagenes: transformar(recetaSeleccionada.imagenes || []),
+      });
+    }
+  };
 
   const mockManejarGuardarImagenes = (
     recetaId: string,
@@ -20,22 +40,14 @@ describe("App Image Handlers", () => {
     setRecetas: (recetas: Receta[]) => void,
     setRecetaSeleccionada: (receta: Receta | null) => void
   ) => {
-    const updatedRecetas = recetas.map((r) =>
-      r.id === recetaId
-        ? {
-            ...r,
-            imagenes: [...(r.imagenes || []), ...imagenesNuevas],
-          }
-        : r
+    actualizarRecetas(
+      recetaId,
+      (imagenes) => [...imagenes, ...imagenesNuevas],
+      recetas,
+      recetaSeleccionada,
+      setRecetas,
+      setRecetaSeleccionada
     );
-    setRecetas(updatedRecetas);
-
-    if (recetaSeleccionada?.id === recetaId) {
-      setRecetaSeleccionada({
-        ...recetaSeleccionada,
-        imagenes: [...(recetaSeleccionada.imagenes || []), ...imagenesNuevas],
-      });
-    }
   };
 
   const mockManejarEliminarImagen = (
@@ -46,24 +58,14 @@ describe("App Image Handlers", () => {
     setRecetas: (recetas: Receta[]) => void,
     setRecetaSeleccionada: (receta: Receta | null) => void
   ) => {
-    const updatedRecetas = recetas.map((r) =>
-      r.id === recetaId
-        ? {
-            ...r,
-            imagenes: (r.imagenes || []).filter((img) => img.id !== imagenId),
-          }
-        : r
+    actualizarRecetas(
+      recetaId,
+      (imagenes) => imagenes.filter((img) => img.id !== imagenId),
+      recetas,
+      recetaSeleccionada,
+      setRecetas,
+      setRecetaSeleccionada
     );
-    setRecetas(updatedRecetas);
-
-    if (recetaSeleccionada?.id === recetaId) {
-      setRecetaSeleccionada({
-        ...recetaSeleccionada,
-        imagenes: (recetaSeleccionada.imagenes || []).filter(
-          (img) => img.id !== imagenId
-        ),
-      });
-    }
   };
 
   const mockManejarReemplazarImagen = (
@@ -75,26 +77,15 @@ describe("App Image Handlers", () => {
     setRecetas: (recetas: Receta[]) => void,
     setRecetaSeleccionada: (receta: Receta | null) => void
   ) => {
-    const updatedRecetas = recetas.map((r) =>
-      r.id === recetaId
-        ? {
-            ...r,
-            imagenes: (r.imagenes || []).map((img) =>
-              img.id === imagenId ? nuevaImagen : img
-            ),
-          }
-        : r
+    actualizarRecetas(
+      recetaId,
+      (imagenes) =>
+        imagenes.map((img) => (img.id === imagenId ? nuevaImagen : img)),
+      recetas,
+      recetaSeleccionada,
+      setRecetas,
+      setRecetaSeleccionada
     );
-    setRecetas(updatedRecetas);
-
-    if (recetaSeleccionada?.id === recetaId) {
-      setRecetaSeleccionada({
-        ...recetaSeleccionada,
-        imagenes: (recetaSeleccionada.imagenes || []).map((img) =>
-          img.id === imagenId ? nuevaImagen : img
-        ),
-      });
-    }
   };
 
   // ===== PRUEBAS DE GUARDAR IMÁGENES =====

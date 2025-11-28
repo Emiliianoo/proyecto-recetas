@@ -175,8 +175,28 @@ export default function RecipeViewModal({
 
   return (
     <>
-      <div className="view-overlay" onClick={cerrar}>
-        <div className="view-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="view-overlay"
+        role="dialog"
+        aria-modal={true}
+        aria-label={`Vista de receta ${receta.nombre}`}
+        tabIndex={0}
+        onClick={cerrar}
+        onKeyDown={(e) => {
+          // Cerrar con Escape, Enter o Espacio para accesibilidad
+          if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            cerrar();
+          }
+        }}
+      >
+        <div
+          className="view-content"
+          role="document"
+          tabIndex={-1}
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
           <div className="view-actions">
@@ -445,6 +465,8 @@ export default function RecipeViewModal({
         >
           <div
             className="lightbox-content"
+            role="document"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
