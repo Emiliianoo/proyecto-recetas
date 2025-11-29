@@ -176,14 +176,15 @@ export default function RecipeViewModal({
 
   return (
     <>
-      <div
-        className="view-overlay"
-        onClick={cerrar}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") cerrar();
-        }}
-      >
-        <div className="view-content" onClick={(e) => e.stopPropagation()}>
+      <div className="view-overlay">
+        <div
+          className="view-content"
+          role="dialog"
+          aria-modal="true"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") cerrar();
+          }}
+        >
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
           <div className="view-actions">
@@ -307,48 +308,31 @@ export default function RecipeViewModal({
                     <small>
                       {new Date(img.fecha).toLocaleDateString("es-MX")}
                     </small>
-                    <div
+                    <button
                       className="galeria-btn-eliminar"
-                      role="button"
-                      tabIndex={0}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (window.confirm("¿Deseas eliminar esta imagen?")) {
+                        if (
+                          globalThis.confirm("¿Deseas eliminar esta imagen?")
+                        ) {
                           onEliminarImagen(receta.id, img.id);
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          if (window.confirm("¿Deseas eliminar esta imagen?")) {
-                            onEliminarImagen(receta.id, img.id);
-                          }
                         }
                       }}
                       title="Eliminar imagen"
                     >
                       ✕
-                    </div>
-                    <div
+                    </button>
+                    <button
                       className="galeria-btn-reemplazar"
-                      role="button"
-                      tabIndex={0}
                       onClick={(e) => {
                         e.stopPropagation();
                         setImagenAReemplazar(img.id);
                         reemplazarInputRef.current?.click();
                       }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          setImagenAReemplazar(img.id);
-                          reemplazarInputRef.current?.click();
-                        }
-                      }}
                       title="Reemplazar imagen"
                     >
                       ↻
-                    </div>
+                    </button>
                   </button>
                 ))}
               </div>
@@ -447,18 +431,15 @@ export default function RecipeViewModal({
 
       {/* Lightbox para expandir imágenes */}
       {mostrarLightbox && imagenActual && (
-        <div
-          className="lightbox-overlay"
-          onClick={cerrarLightbox}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") cerrarLightbox();
-          }}
-        >
+        <div className="lightbox-overlay">
           <div
             className="lightbox-content"
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") cerrarLightbox();
+            }}
+            tabIndex={0}
           >
             <button className="lightbox-close" onClick={cerrarLightbox}>
               ✕
