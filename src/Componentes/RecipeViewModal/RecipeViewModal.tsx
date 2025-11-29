@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import type { KeyboardEvent, MouseEvent, ChangeEvent } from "react";
 import "./RecipeViewModal.css";
 import type { Receta, ImagenReceta } from "../../types";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
@@ -65,6 +66,30 @@ export default function RecipeViewModal({
     null
   );
   const reemplazarInputRef = useRef<HTMLInputElement | null>(null);
+  const viewDialogRef = useRef<HTMLDialogElement | null>(null);
+  const lightboxDialogRef = useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    // Focus the main view dialog when component mounts so keyboard handlers are on an interactive element
+    if (viewDialogRef.current) {
+      try {
+        viewDialogRef.current.focus();
+      } catch {
+        /* ignore focus errors */
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // When lightbox opens, move focus into it
+    if (mostrarLightbox && lightboxDialogRef.current) {
+      try {
+        lightboxDialogRef.current.focus();
+      } catch {
+        /* ignore focus errors */
+      }
+    }
+  }, [mostrarLightbox]);
 
   if (!receta) return null;
 
@@ -177,13 +202,7 @@ export default function RecipeViewModal({
   return (
     <>
       <div className="view-overlay">
-        <dialog
-          className="view-content"
-          open
-          onKeyDown={(e) => {
-            if (e.key === "Escape") cerrar();
-          }}
-        >
+        <dialog ref={viewDialogRef} className="view-content" open tabIndex={0}>
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
           <div className="view-actions">
@@ -309,7 +328,7 @@ export default function RecipeViewModal({
                     </small>
                     <button
                       className="galeria-btn-eliminar"
-                      onClick={(e) => {
+                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         if (
                           globalThis.confirm("¿Deseas eliminar esta imagen?")
@@ -323,7 +342,7 @@ export default function RecipeViewModal({
                     </button>
                     <button
                       className="galeria-btn-reemplazar"
-                      onClick={(e) => {
+                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         setImagenAReemplazar(img.id);
                         reemplazarInputRef.current?.click();
@@ -368,7 +387,7 @@ export default function RecipeViewModal({
             type="file"
             accept="image/*"
             multiple
-            onChange={(e) => {
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               const files = e.target.files;
               if (!files?.length) {
                 setArchivosSeleccionados(null);
@@ -432,13 +451,14 @@ export default function RecipeViewModal({
       {mostrarLightbox && imagenActual && (
         <div className="lightbox-overlay">
           <dialog
+            ref={lightboxDialogRef}
             className="lightbox-content"
             open
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => {
+            tabIndex={0}
+            onClick={(e: MouseEvent<HTMLDialogElement>) => e.stopPropagation()}
+            onKeyDown={(e: KeyboardEvent<HTMLDialogElement>) => {
               if (e.key === "Escape") cerrarLightbox();
             }}
-            role="dialog"
             aria-modal="true"
           >
             <button className="lightbox-close" onClick={cerrarLightbox}>
