@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import type { Receta, NotaReceta } from "./types";
+import type { Receta, NotaReceta, ImagenReceta } from "./types";
 import RecipeList from "./Componentes/RecipeList/RecipeList";
 import Modal from "./Componentes/Modal/Modal";
 import RecipeForm from "./Componentes/RecipeForm/RecipeForm";
@@ -14,6 +14,20 @@ function App() {
     null
   );
 
+  // Helper para actualizar recetas en ambos estados (recetas y recetaSeleccionada)
+  const actualizarReceta = (
+    recetaId: string,
+    transformar: (receta: Receta) => Receta
+  ) => {
+    setRecetas((prev) =>
+      prev.map((r) => (r.id === recetaId ? transformar(r) : r))
+    );
+
+    setRecetaSeleccionada((prev) =>
+      prev?.id === recetaId ? transformar(prev as Receta) : prev
+    );
+  };
+
   const agregarReceta = (nuevaReceta: Receta) => {
     setRecetas((prev) => [...prev, nuevaReceta]);
     setMostrarModal(false);
@@ -26,54 +40,17 @@ function App() {
       fecha: new Date().toISOString(),
     };
 
-    // 1) Actualizar la receta dentro del arreglo de recetas
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? {
-              ...r,
-              notas: [...(r.notas ?? []), nuevaNota],
-            }
-          : r
-      )
-    );
-
-    // 2) Actualizar también la receta seleccionada (para que el modal se refresque)
-    setRecetaSeleccionada((prev) =>
-      prev?.id === recetaId
-        ? { ...prev, notas: [...(prev.notas ?? []), nuevaNota] }
-        : prev
-    );
-  };
-
-  const quitarNotaDeReceta = (receta: Receta, notaId: string): Receta => {
-    const notasActualizadas = (receta.notas ?? []).filter(
-      (n) => n.id !== notaId
-    );
-    return { ...receta, notas: notasActualizadas };
-  };
-
-  const actualizarNotaDeReceta = (
-    receta: Receta,
-    notaId: string,
-    nuevoTexto: string,
-    nuevaFecha: string
-  ): Receta => {
-    const notasActualizadas = (receta.notas ?? []).map((n) =>
-      n.id === notaId ? { ...n, texto: nuevoTexto, fecha: nuevaFecha } : n
-    );
-    return { ...receta, notas: notasActualizadas };
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      notas: [...(r.notas ?? []), nuevaNota],
+    }));
   };
 
   const manejarEliminarNota = (recetaId: string, notaId: string) => {
-    setRecetas((prev) =>
-      prev.map((r) => (r.id === recetaId ? quitarNotaDeReceta(r, notaId) : r))
-    );
-
-    setRecetaSeleccionada((prev) => {
-      if (prev?.id !== recetaId) return prev;
-      return quitarNotaDeReceta(prev, notaId);
-    });
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      notas: (r.notas ?? []).filter((n) => n.id !== notaId),
+    }));
   };
 
   const manejarActualizarNota = (
@@ -83,18 +60,44 @@ function App() {
   ) => {
     const nuevaFecha = new Date().toISOString();
 
-    setRecetas((prev) =>
-      prev.map((r) =>
-        r.id === recetaId
-          ? actualizarNotaDeReceta(r, notaId, nuevoTexto, nuevaFecha)
-          : r
-      )
-    );
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      notas: (r.notas ?? []).map((n) =>
+        n.id === notaId ? { ...n, texto: nuevoTexto, fecha: nuevaFecha } : n
+      ),
+    }));
+  };
 
-    setRecetaSeleccionada((prev) => {
-      if (prev?.id !== recetaId) return prev;
-      return actualizarNotaDeReceta(prev, notaId, nuevoTexto, nuevaFecha);
-    });
+  const manejarGuardarImagenes = (
+    recetaId: string,
+    imagenes: ImagenReceta[]
+  ) => {
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      imagenes: [...(r.imagenes ?? []), ...imagenes],
+    }));
+  };
+
+  const manejarEliminarImagen = (recetaId: string, imagenId: string) => {
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      imagenes: (r.imagenes ?? []).filter((img) => img.id !== imagenId),
+    }));
+  };
+
+  const manejarReemplazarImagen = (
+    recetaId: string,
+    imagenId: string,
+    nuevaImagen: ImagenReceta
+  ) => {
+    actualizarReceta(recetaId, (r) => ({
+      ...r,
+      imagenes: (r.imagenes ?? []).map((img) =>
+        img.id === imagenId
+          ? { ...img, url: nuevaImagen.url, fecha: nuevaImagen.fecha }
+          : img
+      ),
+    }));
   };
 
   return (
@@ -119,6 +122,9 @@ function App() {
         onGuardarNota={manejarGuardarNota}
         onEliminarNota={manejarEliminarNota}
         onActualizarNota={manejarActualizarNota}
+        onGuardarImagenes={manejarGuardarImagenes}
+        onEliminarImagen={manejarEliminarImagen}
+        onReemplazarImagen={manejarReemplazarImagen}
       />
     </div>
   );

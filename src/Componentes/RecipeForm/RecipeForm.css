@@ -37,7 +37,7 @@ input:focus {
 
 .btn-add {
   background-color: #3498db;
-  color: #000000;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 10px 12px;
   border-radius: 8px;
@@ -56,21 +56,21 @@ input:focus {
 
 .btn-eliminar {
   margin-left: 10px;
-  background-color: #ff4d4d;
+  background-color: #c0392b;
   border: none;
-  color: #000000; /* CONTRASTE APROBADO */
+  color: white;
   border-radius: 6px;
   cursor: pointer;
   padding: 5px 10px;
 }
 
 .btn-eliminar:hover {
-  background-color: #e04343;
+  background-color: #a93226;
 }
 
 .btn-guardar {
   background-color: #2ecc71;
-  color: #000000; /* CONTRASTE APROBADO */
+  color: rgb(0, 0, 0);
   border: none;
   padding: 12px;
   border-radius: 10px;
@@ -84,6 +84,6 @@ input:focus {
 }
 
 .error {
-  color: #d63031;
+  color: #a93226;
   font-weight: bold;
 }

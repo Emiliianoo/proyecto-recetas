@@ -1,46 +1,31 @@
-.view-dialog {
-  padding: 0;
-  border: none;
-  background: transparent;
+@import "../../styles/common.css";
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  height: 100%;
-
+.view-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1 !important;
-
-  cursor: pointer;
-}
-
-.view-dialog::backdrop {
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.6);
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
 }
 
 .view-content {
   background: white;
-  width: 600px; /* modal ancho normal */
-  max-width: 90%; /* responsive */
-  max-height: 85vh; /* no sobresalga */
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
   overflow-y: auto;
-
   padding: 30px;
   border-radius: 12px;
-  box-sizing: border-box;
-
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   animation: fadeIn 0.2s ease-in-out;
-
-  cursor: default; /* evita cerrar al clicar dentro */
+  box-sizing: border-box;
+  margin: auto;
 }
 
-/* Animación */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -51,8 +36,6 @@
     transform: scale(1);
   }
 }
-
-/* ====== TITULOS ====== */
 
 .view-title {
   font-size: 28px;
@@ -65,8 +48,6 @@
   margin-bottom: 20px;
   font-weight: bold;
 }
-
-/* ====== SECCIONES ====== */
 
 .view-section {
   background: #f5f5ff;
@@ -96,7 +77,6 @@
   padding: 8px;
   margin-top: 8px;
   box-sizing: border-box;
-
   border-radius: 6px;
   border: 1px solid #ccc;
   font-family: inherit;
@@ -131,32 +111,15 @@
   margin-top: 4px;
 }
 
-.mensaje-exito {
-  color: #27ae60;
-  font-size: 0.9rem;
-  margin-top: 4px;
-}
-
-/* ====== BOTONES ====== */
-
-.btn-guardar-nota {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: none;
-  background-color: #6c63ff;
-  color: black;
-  cursor: pointer;
-  font-size: 14px;
-  float: right;
-}
-
-.btn-guardar-nota:hover {
-  background-color: #5750d4;
+.view-section::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
 .view-close-btn {
   background-color: #6c63ff;
-  color: #000000;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 12px 18px;
   border-radius: 8px;
@@ -170,24 +133,21 @@
   background-color: #5750d4;
 }
 
-.btn-eliminar-nota {
-  background-color: #e74c3c;
-  color: black;
-  border: none;
-  padding: 5px 10px;
-  font-size: 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.nota-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
-.btn-eliminar-nota:hover {
-  background-color: #c0392b;
+.nota-actions {
+  display: flex;
+  gap: 6px;
 }
 
 .btn-editar-nota {
-  background-color: #f1c40f;
-  color: #2c3e50;
+  background-color: #d4a000;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 4px 8px;
   font-size: 12px;
@@ -196,7 +156,41 @@
 }
 
 .btn-editar-nota:hover {
-  background-color: #d4ac0d;
+  background-color: #b88800;
+}
+
+.btn-eliminar-nota {
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-eliminar-nota:hover {
+  background-color: #a93226;
+}
+
+.nota-botones {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-guardar-nota {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: #6c63ff;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-guardar-nota:hover {
+  background-color: #5750d4;
 }
 
 .btn-cancelar-edicion {
@@ -212,22 +206,340 @@
   background-color: #e0e0e0;
 }
 
-/* ====== LAYOUT INTERNO ====== */
+.mensaje-exito {
+  color: #27ae60;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
 
-.nota-header {
+/* Ajustes para que el modal secundario se sienta como parte del mismo sistema visual */
+
+.btn-agregar-imagen {
+  background: linear-gradient(90deg, #4834d4, #6b56d8);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(72, 52, 212, 0.12);
+}
+
+.btn-agregar-imagen:hover {
+  transform: translateY(-2px);
+  opacity: 0.98;
+}
+
+/* Mejor integración visual con el diseño general */
+.modal-imagen-contenido {
+  padding: 18px 20px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.modal-imagen-contenido h3 {
+  color: #3b3a7e;
+  margin: 0;
+}
+
+.modal-imagen-contenido input[type="file"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6e6ef;
+  background: #fbfbff;
+}
+
+.modal-imagen-contenido .nota-pequena {
+  margin: 0;
+}
+
+.modal-imagen-contenido .lista-archivos {
+  background: #fbfbff;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.modal-imagen-contenido .lista-archivos p {
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  color: #444;
+}
+
+.modal-imagen-contenido .lista-archivos ul {
+  margin: 6px 0 0 16px;
+}
+
+.modal-imagen-contenido button {
+  align-self: flex-end;
+  background: linear-gradient(90deg, #6c63ff, #8b6bff);
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-imagen-contenido button:hover {
+  transform: translateY(-2px);
+}
+
+/* Galería de imágenes */
+.galeria-imagenes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+  position: relative;
+}
+
+.galeria-item {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.galeria-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+}
+
+.galeria-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.galeria-item small {
+  display: block;
+  padding: 6px 8px;
+  background: #fafafa;
+  font-size: 11px;
+  color: #666;
+}
+
+.galeria-btn-eliminar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #c0392b;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s ease;
 }
 
-.nota-actions {
+.galeria-item:hover .galeria-btn-eliminar {
+  opacity: 1;
+}
+
+.galeria-btn-eliminar:hover {
+  background: #a93226;
+  transform: scale(1.1);
+}
+
+/* Botón de reemplazar: diseño más integrado con el tema morado */
+.galeria-btn-reemplazar {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #000000;
+  border: 1px solid rgba(108, 99, 255, 0.14);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
   display: flex;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.18s ease;
+  box-shadow: 0 6px 18px rgba(108, 99, 255, 0.08);
 }
 
-.nota-botones {
-  margin-top: 8px;
+.galeria-item:hover .galeria-btn-reemplazar {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.galeria-btn-reemplazar:hover {
+  background: linear-gradient(90deg, #6c63ff, #8b6bff);
+  color: rgb(0, 0, 0);
+  transform: scale(1.08);
+}
+
+.galeria-btn-reemplazar:focus {
+  outline: 3px solid rgba(108, 99, 255, 0.12);
+}
+
+/* Mensajes de error relativos a imágenes */
+.error-imagenes {
+  color: #c0392b;
+  background: #fff5f5;
+  padding: 8px 10px;
+  border: 1px solid rgba(192, 57, 43, 0.08);
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+/* Mensaje de éxito para operaciones de imágenes */
+.success-imagenes {
+  color: #155724;
+  background: #e6ffef;
+  padding: 8px 10px;
+  border: 1px solid rgba(21, 87, 60, 0.08);
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+/* Botones del modal de imágenes */
+.modal-imagen-botones {
   display: flex;
   gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-guardar-imagenes {
+  flex: 1;
+  background: linear-gradient(90deg, #6c63ff, #8b6bff);
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-guardar-imagenes:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+}
+
+.btn-guardar-imagenes:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancelar-imagenes {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-cancelar-imagenes:hover {
+  background: #e8e8e8;
+}
+
+/* Lightbox para imágenes expandidas */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.lightbox-close:hover {
+  background: #f5f5f5;
+  transform: scale(1.1);
+}
+
+.lightbox-fecha {
+  color: #ccc;
+  font-size: 14px;
+  margin: 0;
+  text-align: center;
+}
+
+/* Ajustes para que el modal secundario se sienta como parte del mismo sistema visual */
+.view-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+  margin-bottom: 16px;
 }

@@ -1,6 +1,6 @@
 .btn-ver {
-  background-color: #6c63ff;
-  color: #000000; /* CONTRASTE APROBADO */
+  background-color: #4834d4;
+  color: white;
   padding: 8px 14px;
   border: none;
   border-radius: 8px;
@@ -9,5 +9,5 @@
 }
 
 .btn-ver:hover {
-  background-color: #574fd0;
+  background-color: #3c2ba3;
 }

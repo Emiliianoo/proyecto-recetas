@@ -8,8 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test": "vitest"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -24,7 +23,6 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
-    "@vitest/ui": "^4.0.14",
     "@vue/test-utils": "^2.4.6",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.1",

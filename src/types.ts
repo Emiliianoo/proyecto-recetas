@@ -16,6 +16,12 @@ export interface NotaReceta {
   fecha: string;
 }
 
+export interface ImagenReceta {
+  id: string;
+  url: string; // base64 data URL
+  fecha: string;
+}
+
 export interface Receta {
   id: string;
   nombre: string;
@@ -23,4 +29,5 @@ export interface Receta {
   ingredientes: Ingrediente[];
   instrucciones: Instruccion[];
   notas?: NotaReceta[];
+  imagenes?: ImagenReceta[];
 }

@@ -1,0 +1,35 @@
+/* Shared base styles to reduce duplication across component CSS */
+
+/* Apply a sensible base to any class starting with "btn-" */
+[class*="btn-"] {
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Small variant (for icon-only or compact buttons) */
+.btn-small {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+/* Disabled appearance helper */
+[class*="btn-"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Confirm modal buttons use the same base class names but are not prefixed with btn- */
+.confirm-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 10px 0;
+}
