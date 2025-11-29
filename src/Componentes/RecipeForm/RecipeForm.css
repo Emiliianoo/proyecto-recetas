@@ -37,7 +37,7 @@ input:focus {
 
 .btn-add {
   background-color: #3498db;
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 10px 12px;
   border-radius: 8px;
@@ -70,7 +70,7 @@ input:focus {
 
 .btn-guardar {
   background-color: #2ecc71;
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 12px;
   border-radius: 10px;

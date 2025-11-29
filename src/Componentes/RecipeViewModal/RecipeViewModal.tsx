@@ -15,7 +15,10 @@ interface Props {
     notaId: string,
     nuevoTexto: string
   ) => void;
-  readonly onGuardarImagenes: (recetaId: string, imagenes: ImagenReceta[]) => void;
+  readonly onGuardarImagenes: (
+    recetaId: string,
+    imagenes: ImagenReceta[]
+  ) => void;
   readonly onEliminarImagen: (recetaId: string, imagenId: string) => void;
   readonly onReemplazarImagen: (
     recetaId: string,
@@ -173,12 +176,14 @@ export default function RecipeViewModal({
 
   return (
     <>
-      <div className="view-overlay" onClick={cerrar}>
-        <div
-          className="view-content"
-          role="document"
-          onClick={(e) => e.stopPropagation()}
-        >
+      <div
+        className="view-overlay"
+        onClick={cerrar}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") cerrar();
+        }}
+      >
+        <div className="view-content" onClick={(e) => e.stopPropagation()}>
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
           <div className="view-actions">
@@ -442,8 +447,17 @@ export default function RecipeViewModal({
 
       {/* Lightbox para expandir imágenes */}
       {mostrarLightbox && imagenActual && (
-        <div className="lightbox-overlay" onClick={cerrarLightbox}>
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="lightbox-overlay"
+          onClick={cerrarLightbox}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") cerrarLightbox();
+          }}
+        >
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button className="lightbox-close" onClick={cerrarLightbox}>
               ✕
             </button>
