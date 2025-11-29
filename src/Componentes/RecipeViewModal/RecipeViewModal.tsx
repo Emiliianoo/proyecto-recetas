@@ -177,10 +177,9 @@ export default function RecipeViewModal({
   return (
     <>
       <div className="view-overlay">
-        <div
+        <dialog
           className="view-content"
-          role="dialog"
-          aria-modal="true"
+          open
           onKeyDown={(e) => {
             if (e.key === "Escape") cerrar();
           }}
@@ -346,7 +345,7 @@ export default function RecipeViewModal({
           <button className="view-close-btn" onClick={cerrar}>
             Cerrar
           </button>
-        </div>
+        </dialog>
       </div>
 
       <ConfirmModal
@@ -432,14 +431,15 @@ export default function RecipeViewModal({
       {/* Lightbox para expandir imágenes */}
       {mostrarLightbox && imagenActual && (
         <div className="lightbox-overlay">
-          <div
+          <dialog
             className="lightbox-content"
-            role="dialog"
-            aria-modal="true"
+            open
+            onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
               if (e.key === "Escape") cerrarLightbox();
             }}
-            tabIndex={0}
+            role="dialog"
+            aria-modal="true"
           >
             <button className="lightbox-close" onClick={cerrarLightbox}>
               ✕
@@ -451,7 +451,7 @@ export default function RecipeViewModal({
                 timeStyle: "short",
               })}
             </p>
-          </div>
+          </dialog>
         </div>
       )}
 
