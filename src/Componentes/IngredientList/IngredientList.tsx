@@ -2,8 +2,8 @@ import type { Ingrediente } from "../../types";
 import "./IngredientList.css";
 
 interface Props {
-  ingredientes: Ingrediente[];
-  eliminarIngrediente: (id: string) => void;
+  readonly ingredientes: Ingrediente[];
+  readonly eliminarIngrediente: (id: string) => void;
 }
 
 export default function IngredientList({

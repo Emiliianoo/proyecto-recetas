@@ -457,6 +457,8 @@ export default function RecipeViewModal({
           <div
             className="lightbox-content"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+            tabIndex={-1}
           >
             <button className="lightbox-close" onClick={cerrarLightbox}>
               ✕
