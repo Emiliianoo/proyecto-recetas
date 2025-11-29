@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import type { KeyboardEvent, MouseEvent, ChangeEvent } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import type { MouseEvent, ChangeEvent } from "react";
 import "./RecipeViewModal.css";
 import type { Receta, ImagenReceta } from "../../types";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
@@ -69,6 +69,11 @@ export default function RecipeViewModal({
   const viewDialogRef = useRef<HTMLDialogElement | null>(null);
   const lightboxDialogRef = useRef<HTMLDialogElement | null>(null);
 
+  const cerrarLightbox = useCallback(() => {
+    setMostrarLightbox(false);
+    setImagenActual(null);
+  }, []);
+
   useEffect(() => {
     // Focus the main view dialog when component mounts so keyboard handlers are on an interactive element
     if (viewDialogRef.current) {
@@ -90,6 +95,32 @@ export default function RecipeViewModal({
       }
     }
   }, [mostrarLightbox]);
+
+  // Add global handlers while lightbox is open: Escape key and outside clicks
+  useEffect(() => {
+    if (!mostrarLightbox) return;
+
+    const handleKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") cerrarLightbox();
+    };
+
+    const handleDocClick = (ev: globalThis.MouseEvent) => {
+      const dialog = lightboxDialogRef.current;
+      if (!dialog) return;
+      const target = ev.target as Node | null;
+      if (target && !dialog.contains(target)) {
+        cerrarLightbox();
+      }
+    };
+
+    document.addEventListener("keydown", handleKey);
+    document.addEventListener("click", handleDocClick);
+
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("click", handleDocClick);
+    };
+  }, [mostrarLightbox, cerrarLightbox]);
 
   if (!receta) return null;
 
@@ -189,11 +220,6 @@ export default function RecipeViewModal({
     setArchivosSeleccionados(null);
   };
 
-  const cerrarLightbox = () => {
-    setMostrarLightbox(false);
-    setImagenActual(null);
-  };
-
   const mostrarExito = (mensaje: string) => {
     setImagenExito(mensaje);
     setTimeout(() => setImagenExito(null), 3000);
@@ -202,7 +228,7 @@ export default function RecipeViewModal({
   return (
     <>
       <div className="view-overlay">
-        <dialog ref={viewDialogRef} className="view-content" open tabIndex={0}>
+        <dialog ref={viewDialogRef} className="view-content" open>
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
           <div className="view-actions">
@@ -454,11 +480,6 @@ export default function RecipeViewModal({
             ref={lightboxDialogRef}
             className="lightbox-content"
             open
-            tabIndex={0}
-            onClick={(e: MouseEvent<HTMLDialogElement>) => e.stopPropagation()}
-            onKeyDown={(e: KeyboardEvent<HTMLDialogElement>) => {
-              if (e.key === "Escape") cerrarLightbox();
-            }}
             aria-modal="true"
           >
             <button className="lightbox-close" onClick={cerrarLightbox}>
