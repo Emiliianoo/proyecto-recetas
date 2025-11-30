@@ -17,14 +17,23 @@ describe("RecipeList", () => {
     instrucciones: [],
   };
   const onVerMock = vi.fn();
+  const onEliminarMock = vi.fn();
 
   test("Lista vacía", () => {
-    render(<RecipeList recetas={[]} onVer={onVerMock} />);
+    render(
+      <RecipeList recetas={[]} onVer={onVerMock} onEliminar={onEliminarMock} />
+    );
     expect(screen.getByText(/No hay recetas registradas/i)).toBeInTheDocument();
   });
 
   test("Orden de las recetas", () => {
-    render(<RecipeList recetas={[receta1, receta2]} onVer={onVerMock} />);
+    render(
+      <RecipeList
+        recetas={[receta1, receta2]}
+        onVer={onVerMock}
+        onEliminar={onEliminarMock}
+      />
+    );
     const cards = screen.getAllByText(/Taco|Pizza/i);
     expect(cards[0]).toHaveTextContent("Taco");
     expect(cards[1]).toHaveTextContent("Pizza");
