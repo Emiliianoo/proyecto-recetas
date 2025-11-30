@@ -44,3 +44,17 @@
 .btn-ver:hover {
   background-color: #6930d8;
 }
+
+.btn-eliminar-receta {
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-eliminar-receta:hover {
+  background-color: #a93226;
+}

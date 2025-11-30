@@ -5,10 +5,14 @@ import RecipeList from "./Componentes/RecipeList/RecipeList";
 import Modal from "./Componentes/Modal/Modal";
 import RecipeForm from "./Componentes/RecipeForm/RecipeForm";
 import RecipeViewModal from "./Componentes/RecipeViewModal/RecipeViewModal";
+import ConfirmModal from "./Componentes/ConfirmModal/ConfirmModal";
 
 function App() {
   const [recetas, setRecetas] = useState<Receta[]>([]);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [recetaAEliminar, setRecetaAEliminar] = useState<string | null>(null);
+  const [mostrarConfirmacionEliminar, setMostrarConfirmacionEliminar] =
+    useState(false);
 
   const [recetaSeleccionada, setRecetaSeleccionada] = useState<Receta | null>(
     null
@@ -100,6 +104,19 @@ function App() {
     }));
   };
 
+  const manejarEliminarReceta = (id: string) => {
+    setRecetaAEliminar(id);
+    setMostrarConfirmacionEliminar(true);
+  };
+
+  const confirmarEliminarReceta = () => {
+    if (!recetaAEliminar) return;
+
+    setRecetas((prev) => prev.filter((r) => r.id !== recetaAEliminar));
+    setRecetaAEliminar(null);
+    setMostrarConfirmacionEliminar(false);
+  };
+
   return (
     <div className="contenedor-app">
       <div className="encabezado">
@@ -110,7 +127,11 @@ function App() {
         </button>
       </div>
 
-      <RecipeList recetas={recetas} onVer={setRecetaSeleccionada} />
+      <RecipeList
+        recetas={recetas}
+        onVer={setRecetaSeleccionada}
+        onEliminar={manejarEliminarReceta}
+      />
 
       <Modal mostrar={mostrarModal} cerrar={() => setMostrarModal(false)}>
         <RecipeForm agregarReceta={agregarReceta} />
@@ -125,6 +146,13 @@ function App() {
         onGuardarImagenes={manejarGuardarImagenes}
         onEliminarImagen={manejarEliminarImagen}
         onReemplazarImagen={manejarReemplazarImagen}
+      />
+
+      <ConfirmModal
+        mostrar={mostrarConfirmacionEliminar}
+        mensaje="¿Eliminar esta receta definitivamente?"
+        onConfirmar={confirmarEliminarReceta}
+        onCancelar={() => setMostrarConfirmacionEliminar(false)}
       />
     </div>
   );

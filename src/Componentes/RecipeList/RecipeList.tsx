@@ -5,16 +5,22 @@ import "./RecipeList.css";
 interface Props {
   readonly recetas: Receta[];
   readonly onVer: (receta: Receta) => void;
+  readonly onEliminar: (id: string) => void;
 }
 
-export default function RecipeList({ recetas, onVer }: Props) {
+export default function RecipeList({ recetas, onVer, onEliminar }: Props) {
   if (recetas.length === 0)
     return <p className="texto-vacio">No hay recetas registradas.</p>;
 
   return (
     <div className="lista-recetas">
       {recetas.map((r) => (
-        <RecipeCard key={r.id} receta={r} onVer={onVer} />
+        <RecipeCard
+          key={r.id}
+          receta={r}
+          onVer={onVer}
+          onEliminar={onEliminar}
+        />
       ))}
     </div>
   );
