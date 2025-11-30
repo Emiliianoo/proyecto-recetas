@@ -21,6 +21,7 @@ describe('agregar notas especiales o modificaciones en cada receta', () => {
       text
     })
 
+    cy.contains("Nota agregada correctamente.").should("exist");
     
   })
   it('Validar que no se pueda guardar una nota si el campo está vacío.', () => {
@@ -90,4 +91,25 @@ describe('agregar notas especiales o modificaciones en cada receta', () => {
 
     cy.contains("La nota no puede estar vacía.").should("exist");
   })
+
+  it('Evitar que al editar una nota se modifiquen otras notas por error', () => {
+  const nota1 = "Esta es la primera nota";
+  const nota2 = "Esta es la segunda nota";
+
+  cy.addNote({ text: nota1 });
+  cy.addNote({ text: nota2 });
+
+  const nuevaNota1 = "Primera nota modificada";
+
+  cy.get('.lista-notas li').first().within(() => {
+    cy.get('.btn-editar-nota').click();
+  });
+
+  cy.get('textarea').clear().type(nuevaNota1);
+  cy.get('.btn-guardar-nota').click();
+
+  // Validar que solo una fue modificada
+  cy.get('.lista-notas li').first().should('contain.text', nuevaNota1);
+  cy.get('.lista-notas li').eq(1).should('contain.text', nota2);
+});
 })
