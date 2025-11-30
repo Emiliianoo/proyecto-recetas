@@ -13,15 +13,18 @@ export default function RecipeCard({ receta, onVer, onEliminar }: Props) {
       <h3>{receta.nombre}</h3>
       <p className="tipo">Tipo de cocina: {receta.tipoCocina}</p>
 
-      <button className="btn-ver" onClick={() => onVer(receta)}>
-        Ver
-      </button>
-      <button
-        className="btn-eliminar-receta"
-        onClick={() => onEliminar(receta.id)}
-      >
-        Eliminar
-      </button>
+      <div className="botones-tarjeta">
+        <button className="btn-ver" onClick={() => onVer(receta)}>
+          Ver
+        </button>
+
+        <button
+          className="btn-eliminar-receta"
+          onClick={() => onEliminar(receta.id)}
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
   );
 }
