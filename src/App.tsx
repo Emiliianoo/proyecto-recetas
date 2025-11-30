@@ -7,8 +7,12 @@ import RecipeForm from "./Componentes/RecipeForm/RecipeForm";
 import RecipeViewModal from "./Componentes/RecipeViewModal/RecipeViewModal";
 import ConfirmModal from "./Componentes/ConfirmModal/ConfirmModal";
 
-function App() {
-  const [recetas, setRecetas] = useState<Receta[]>([]);
+interface AppProps {
+  initialRecetas?: Receta[];
+}
+
+function App({ initialRecetas = [] }: AppProps) {
+  const [recetas, setRecetas] = useState<Receta[]>(initialRecetas);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [recetaAEliminar, setRecetaAEliminar] = useState<string | null>(null);
   const [mostrarConfirmacionEliminar, setMostrarConfirmacionEliminar] =
