@@ -1,21 +1,21 @@
 import { error } from 'console'
 import './commands'
 describe('agregar notas especiales o modificaciones en cada receta', () => {
-  it('Validar que el usuario pueda agregar una nota a una receta existente con éxito.', () => {
-    cy.visit("https://proyecto-recetas-cocina.netlify.app")
-    const nombre = "Pastel de Chocolate";
-    const tipo = "Postres";
-    const ingredientes = ["Harina", "Chocolate","Leche"];
-    const instrucciones = ["Mezclar, hornear"];
-    // Crear
-    cy.createRecipe({
-      nombre,
-      tipo,
-      ingredientes,
-      instrucciones
-    })
+  
+  beforeEach(() => {
+    cy.visit("https://proyecto-recetas-cocina.netlify.app");
 
-    cy.get('button[class = "btn-ver"]').click()
+    cy.createRecipe({
+      nombre: "Pastel de Chocolate",
+      tipo: "Postres",
+      ingredientes: ["Harina", "Chocolate", "Leche"],
+      instrucciones: ["Mezclar", "Hornear"]
+    });
+
+    cy.get('.btn-ver').click();
+  });
+  
+  it('Validar que el usuario pueda agregar una nota a una receta existente con éxito.', () => {
     const text = "texto de prueba";
     cy.addNote({
       text
@@ -24,20 +24,6 @@ describe('agregar notas especiales o modificaciones en cada receta', () => {
     
   })
   it('Validar que no se pueda guardar una nota si el campo está vacío.', () => {
-    cy.visit("https://proyecto-recetas-cocina.netlify.app")
-    const nombre = "Pastel de Chocolate";
-    const tipo = "Postres";
-    const ingredientes = ["Harina", "Chocolate","Leche"];
-    const instrucciones = ["Mezclar, hornear"];
-    // Crear
-    cy.createRecipe({
-      nombre,
-      tipo,
-      ingredientes,
-      instrucciones
-    })
-
-    cy.get('button[class = "btn-ver"]').click()
     const text = null;
     cy.addNote({
       text
@@ -47,20 +33,6 @@ describe('agregar notas especiales o modificaciones en cada receta', () => {
   })
 
   it('Validar que una receta pueda tener más de una nota.', () => {
-    cy.visit("https://proyecto-recetas-cocina.netlify.app")
-    const nombre = "Pastel de Chocolate";
-    const tipo = "Postres";
-    const ingredientes = ["Harina", "Chocolate","Leche"];
-    const instrucciones = ["Mezclar, hornear"];
-    // Crear
-    cy.createRecipe({
-      nombre,
-      tipo,
-      ingredientes,
-      instrucciones
-    })
-
-    cy.get('button[class = "btn-ver"]').click()
     const text = "notas de prueba";
     cy.addNote({
       text
@@ -74,20 +46,6 @@ describe('agregar notas especiales o modificaciones en cada receta', () => {
   })
 
   it('Eliminar nota exitosamente.', () => {
-    cy.visit("https://proyecto-recetas-cocina.netlify.app")
-    const nombre = "Pastel de Chocolate";
-    const tipo = "Postres";
-    const ingredientes = ["Harina", "Chocolate","Leche"];
-    const instrucciones = ["Mezclar, hornear"];
-    // Crear
-    cy.createRecipe({
-      nombre,
-      tipo,
-      ingredientes,
-      instrucciones
-    })
-
-    cy.get('button[class = "btn-ver"]').click()
     const text = "nota de prueba";
     cy.addNote({
       text
@@ -95,5 +53,41 @@ describe('agregar notas especiales o modificaciones en cada receta', () => {
 
     cy.get('button[class = "btn-eliminar-nota"]').click() 
     cy.get('button[class = "confirm-btn eliminar"]').click()
+
+    cy.contains("Nota eliminada").should("exist");
+    cy.get('.lista-notas li').should('have.length', 0);
+  })
+  
+  it('Validar que una nota ya registrada pueda ser modificada', () => {
+    const text = "nota de prueba";
+    cy.addNote({
+      text
+    })
+
+    const nuevoTexto = "nota modificada";
+    cy.get('button[class="btn-editar-nota"]').click()
+
+    cy.get("textarea").clear().type(nuevoTexto)
+
+    cy.get('button[class="btn-guardar-nota"]').click()
+
+    cy.contains(nuevoTexto).should("exist");
+    cy.contains("Nota actualizada correctamente.").should("exist");
+
+
+  })
+
+  it('Validar que el sistema impida dejar una nota completamente vacía tras una edición.', () => {
+    const text = "nota de prueba";
+    cy.addNote({
+      text
+    })
+    cy.get('button[class="btn-editar-nota"]').click()
+
+    cy.get("textarea").clear()
+
+    cy.get('button[class="btn-guardar-nota"]').click()
+
+    cy.contains("La nota no puede estar vacía.").should("exist");
   })
 })

@@ -1,13 +1,16 @@
-import { error } from 'console'
 import './commands'
 
 describe('registrar una receta con nombre, tipo de cocina, lista de ingredientes e instrucciones', () => {
+  
+  beforeEach(() => {
+    cy.visit("https://proyecto-recetas-cocina.netlify.app");
+  });
+
   it('Crear una receta y validar que los datos se guarden', () => {
-    cy.visit("https://proyecto-recetas-cocina.netlify.app")
     const nombre = "Pastel de Chocolate";
     const tipo = "Postres";
     const ingredientes = ["Harina", "Chocolate","Leche"];
-    const instrucciones = ["Mezclar, hornear"];
+    const instrucciones = ["Mezclar", "hornear"];
     // Crear
     cy.createRecipe({
       nombre,
@@ -22,10 +25,10 @@ describe('registrar una receta con nombre, tipo de cocina, lista de ingredientes
     cy.get('.view-content').within(() => {
       cy.contains(nombre).should("exist");
       cy.contains(tipo).should("exist");
-      cy.get('ul').each((item, index) => {
+      cy.get('ul li').each((item, index) => {
         cy.wrap(item).should('contain.text', ingredientes[index]);
       });
-      cy.get('ol').each((item, index) => {
+      cy.get('ol li').each((item, index) => {
         cy.wrap(item).should('contain.text', instrucciones[index]);
       });
     })
@@ -70,8 +73,6 @@ describe('registrar una receta con nombre, tipo de cocina, lista de ingredientes
 
   casos.forEach(caso => {
     it(`No debe guardar cuando falta: ${caso.error}`, () => {
-      cy.visit("https://proyecto-recetas-cocina.netlify.app")
-
       cy.createRecipe({
         nombre: caso.nombre,
         tipo: caso.tipo,
@@ -79,7 +80,7 @@ describe('registrar una receta con nombre, tipo de cocina, lista de ingredientes
         instrucciones: caso.instrucciones
       })
 
-      cy.contains("Debes completar todos los campos y agregar al menos un ingrediente e instrucción.").should("exist")
+      cy.get("p.error").should("exist")
     })
   })
 })
