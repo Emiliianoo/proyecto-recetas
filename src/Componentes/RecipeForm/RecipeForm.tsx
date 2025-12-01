@@ -11,6 +11,7 @@ export default function RecipeForm({ agregarReceta }: Props) {
   // Campos principales
   const [nombre, setNombre] = useState("");
   const [tipoCocina, setTipoCocina] = useState("");
+  const [tiempoCoccion, setTiempoCoccion] = useState("");
 
   // Listas dinámicas
   const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
@@ -56,14 +57,19 @@ export default function RecipeForm({ agregarReceta }: Props) {
   };
 
   const guardarReceta = () => {
+    const minutos = Number(tiempoCoccion);
+
     if (
       !nombre ||
       !tipoCocina ||
+      !tiempoCoccion ||
+      Number.isNaN(minutos) ||
+      minutos <= 0 ||
       ingredientes.length === 0 ||
       listaInstrucciones.length === 0
     ) {
       setError(
-        "Debes completar todos los campos y agregar al menos un ingrediente e instrucción."
+        "Debes completar todos los campos, agregar al menos un ingrediente e instrucción y capturar un tiempo de cocción válido (minutos positivos)."
       );
       return;
     }
@@ -72,6 +78,7 @@ export default function RecipeForm({ agregarReceta }: Props) {
       id: crypto.randomUUID(),
       nombre,
       tipoCocina,
+      tiempoCoccionMinutos: minutos,
       ingredientes,
       instrucciones: listaInstrucciones,
     };
@@ -101,6 +108,16 @@ export default function RecipeForm({ agregarReceta }: Props) {
         type="text"
         value={tipoCocina}
         onChange={(e) => setTipoCocina(e.target.value)}
+      />
+
+      {/* Tiempo de cocción */}
+      <label htmlFor="tiempoCoccion">Tiempo de cocción (minutos)</label>
+      <input
+        id="tiempoCoccion"
+        type="number"
+        min={1}
+        value={tiempoCoccion}
+        onChange={(e) => setTiempoCoccion(e.target.value)}
       />
 
       {/* Ingredientes */}

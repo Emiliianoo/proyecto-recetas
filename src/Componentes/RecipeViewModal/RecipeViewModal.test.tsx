@@ -7,6 +7,7 @@ describe("RecipeViewModal", () => {
     id: "1",
     nombre: "Taco",
     tipoCocina: "Mexicana",
+    tiempoCoccionMinutos: 30,
     ingredientes: [{ id: "i1", nombre: "Carne" }],
     instrucciones: [{ id: "ins1", texto: "Cocinar" }],
   };

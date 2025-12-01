@@ -6,6 +6,7 @@ describe("RecipeCard", () => {
     id: "1",
     nombre: "Taco",
     tipoCocina: "Mexicana",
+    tiempoCoccionMinutos: 30,
     ingredientes: [],
     instrucciones: [],
   };

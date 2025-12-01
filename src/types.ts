@@ -26,6 +26,7 @@ export interface Receta {
   id: string;
   nombre: string;
   tipoCocina: string;
+  tiempoCoccionMinutos: number;
   ingredientes: Ingrediente[];
   instrucciones: Instruccion[];
   notas?: NotaReceta[];

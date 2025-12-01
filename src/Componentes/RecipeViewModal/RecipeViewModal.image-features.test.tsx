@@ -9,6 +9,7 @@ describe("RecipeViewModal - Single Smoke Test", () => {
       id: "1",
       nombre: "Pasta",
       tipoCocina: "Italiana",
+      tiempoCoccionMinutos: 20,
       ingredientes: [],
       instrucciones: [],
       notas: [],

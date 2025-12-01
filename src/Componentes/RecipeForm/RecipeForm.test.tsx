@@ -16,6 +16,9 @@ describe("RecipeForm", () => {
     fireEvent.change(screen.getByLabelText(/Tipo de cocina/i), {
       target: { value: "Mexicana" },
     });
+    fireEvent.change(screen.getByLabelText(/Tiempo de cocción/i), {
+      target: { value: "30" },
+    });
     fireEvent.change(screen.getAllByRole("textbox")[2], {
       target: { value: "Carne" },
     });

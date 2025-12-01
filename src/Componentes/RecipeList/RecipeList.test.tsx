@@ -6,6 +6,7 @@ describe("RecipeList", () => {
     id: "1",
     nombre: "Taco",
     tipoCocina: "Mexicana",
+    tiempoCoccionMinutos: 30,
     ingredientes: [],
     instrucciones: [],
   };
@@ -13,6 +14,7 @@ describe("RecipeList", () => {
     id: "2",
     nombre: "Pizza",
     tipoCocina: "Italiana",
+    tiempoCoccionMinutos: 25,
     ingredientes: [],
     instrucciones: [],
   };
