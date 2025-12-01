@@ -231,6 +231,12 @@ export default function RecipeViewModal({
         <dialog ref={viewDialogRef} className="view-content" open>
           <h2 className="view-title">{receta.nombre}</h2>
           <p className="view-subtitle">{receta.tipoCocina}</p>
+          <p className="view-cooktime">
+            Tiempo de cocción:{" "}
+            <span className="view-cooktime-value">
+              {receta.tiempoCoccionMinutos} min
+            </span>
+          </p>
           <div className="view-actions">
             <button
               className="btn-agregar-imagen"
