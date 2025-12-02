@@ -10,15 +10,28 @@ describe("RecipeCard", () => {
     instrucciones: [],
   };
   const onVerMock = vi.fn();
+  const onEliminarMock = vi.fn();
 
   test("Renderizar datos de la receta", () => {
-    render(<RecipeCard receta={receta} onVer={onVerMock} />);
+    render(
+      <RecipeCard
+        receta={receta}
+        onVer={onVerMock}
+        onEliminar={onEliminarMock}
+      />
+    );
     expect(screen.getByText("Taco")).toBeInTheDocument();
     expect(screen.getByText(/Tipo de cocina: Mexicana/i)).toBeInTheDocument();
   });
 
   test("Click en 'Ver'", () => {
-    render(<RecipeCard receta={receta} onVer={onVerMock} />);
+    render(
+      <RecipeCard
+        receta={receta}
+        onVer={onVerMock}
+        onEliminar={onEliminarMock}
+      />
+    );
     fireEvent.click(screen.getByText(/Ver/i));
     expect(onVerMock).toHaveBeenCalledWith(receta);
   });
@@ -29,7 +42,13 @@ describe("RecipeCard", () => {
       nombre: "x".repeat(500),
       tipoCocina: "y".repeat(500),
     };
-    render(<RecipeCard receta={recetaLarga} onVer={onVerMock} />);
+    render(
+      <RecipeCard
+        receta={recetaLarga}
+        onVer={onVerMock}
+        onEliminar={onEliminarMock}
+      />
+    );
     expect(screen.getByText("x".repeat(500))).toBeInTheDocument();
     expect(screen.getByText(/Tipo de cocina: y{500}/i)).toBeInTheDocument();
   });
