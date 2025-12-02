@@ -8,7 +8,7 @@ import RecipeViewModal from "./Componentes/RecipeViewModal/RecipeViewModal";
 import ConfirmModal from "./Componentes/ConfirmModal/ConfirmModal";
 
 interface AppProps {
-  initialRecetas?: Receta[];
+  readonly initialRecetas?: Receta[];
 }
 
 function App({ initialRecetas = [] }: AppProps) {
