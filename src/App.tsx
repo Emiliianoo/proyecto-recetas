@@ -142,6 +142,7 @@ function App({ initialRecetas = [] }: AppProps) {
       </Modal>
 
       <RecipeViewModal
+        key={recetaSeleccionada?.id ?? "sin-receta"}
         receta={recetaSeleccionada}
         cerrar={() => setRecetaSeleccionada(null)}
         onGuardarNota={manejarGuardarNota}
