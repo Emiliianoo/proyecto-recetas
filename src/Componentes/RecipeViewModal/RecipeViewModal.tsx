@@ -174,11 +174,16 @@ export default function RecipeViewModal({
     if (notaAEliminar) {
       onEliminarNota(receta.id, notaAEliminar);
     }
+
     setMostrarConfirmacion(false);
     setNotaAEliminar(null);
     setEstaEditando(false);
     setNotaEditandoId(null);
     setNotaTexto("");
+
+    // limpiar error y mostrar mensaje de eliminación
+    setErrorNota("");
+    setMensajeExito("Nota eliminada correctamente.");
   };
 
   const manejarCargarImagenes = async () => {
