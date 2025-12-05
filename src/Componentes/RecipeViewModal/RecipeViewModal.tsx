@@ -45,6 +45,10 @@ export default function RecipeViewModal({
   // Estado para eliminar
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [notaAEliminar, setNotaAEliminar] = useState<string | null>(null);
+  
+  // Estado para confirmación de eliminación de imagen
+  const [mostrarConfirmacionImagen, setMostrarConfirmacionImagen] = useState(false);
+  const [imagenAEliminar, setImagenAEliminar] = useState<string | null>(null);
 
   // Estado para el modo edición
   const [estaEditando, setEstaEditando] = useState(false);
@@ -184,6 +188,20 @@ export default function RecipeViewModal({
     // limpiar error y mostrar mensaje de eliminación
     setErrorNota("");
     setMensajeExito("Nota eliminada correctamente.");
+  };
+
+  const abrirConfirmacionImagen = (imagenId: string) => {
+    setImagenAEliminar(imagenId);
+    setMostrarConfirmacionImagen(true);
+  };
+
+  const confirmarEliminacionImagen = () => {
+    if (imagenAEliminar) {
+      onEliminarImagen(receta.id, imagenAEliminar);
+      mostrarExito("Imagen eliminada correctamente.");
+    }
+    setMostrarConfirmacionImagen(false);
+    setImagenAEliminar(null);
   };
 
   const manejarCargarImagenes = async () => {
@@ -340,57 +358,59 @@ export default function RecipeViewModal({
           </div>
 
           {/* GALERÍA DE IMÁGENES */}
-          {receta.imagenes && receta.imagenes.length > 0 && (
-            <div className="view-section">
-              <h3>Imágenes de progreso</h3>
-              <div className="galeria-imagenes">
-                {receta.imagenes?.map((img) => (
-                  <button
-                    key={img.id}
-                    className="galeria-item"
-                    onClick={() => {
-                      setImagenActual(img);
-                      setMostrarLightbox(true);
-                    }}
-                  >
-                    <img src={img.url} alt="Progreso" />
-                    <small>
-                      {new Date(img.fecha).toLocaleDateString("es-MX")}
-                    </small>
+          <div className="view-section">
+            <h3>Imágenes de progreso</h3>
+            {receta.imagenes && receta.imagenes.length > 0 ? (
+              <>
+                <div className="galeria-imagenes">
+                  {receta.imagenes.map((img) => (
                     <button
-                      className="galeria-btn-eliminar"
-                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                        e.stopPropagation();
-                        if (
-                          globalThis.confirm("¿Deseas eliminar esta imagen?")
-                        ) {
-                          onEliminarImagen(receta.id, img.id);
-                        }
+                      key={img.id}
+                      className="galeria-item"
+                      onClick={() => {
+                        setImagenActual(img);
+                        setMostrarLightbox(true);
                       }}
-                      title="Eliminar imagen"
                     >
-                      ✕
+                      <img src={img.url} alt="Progreso" />
+                      <small>
+                        {new Date(img.fecha).toLocaleDateString("es-MX")}
+                      </small>
+                      <button
+                        className="galeria-btn-eliminar"
+                        onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                          e.stopPropagation();
+                          abrirConfirmacionImagen(img.id);
+                        }}
+                        title="Eliminar imagen"
+                      >
+                        ✕
+                      </button>
+                      <button
+                        className="galeria-btn-reemplazar"
+                        onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                          e.stopPropagation();
+                          setImagenAReemplazar(img.id);
+                          reemplazarInputRef.current?.click();
+                        }}
+                        title="Reemplazar imagen"
+                      >
+                        ↻
+                      </button>
                     </button>
-                    <button
-                      className="galeria-btn-reemplazar"
-                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                        e.stopPropagation();
-                        setImagenAReemplazar(img.id);
-                        reemplazarInputRef.current?.click();
-                      }}
-                      title="Reemplazar imagen"
-                    >
-                      ↻
-                    </button>
-                  </button>
-                ))}
-              </div>
-              {errorReemplazo && (
-                <p className="error-imagenes">{errorReemplazo}</p>
-              )}
-              {imagenExito && <p className="success-imagenes">{imagenExito}</p>}
-            </div>
-          )}
+                  ))}
+                </div>
+                {errorReemplazo && (
+                  <p className="error-imagenes">{errorReemplazo}</p>
+                )}
+                {imagenExito && <p className="success-imagenes">{imagenExito}</p>}
+              </>
+            ) : (
+              <p className="texto-sin-notas">
+                Aún no hay imágenes para esta receta.
+              </p>
+            )}
+          </div>
 
           <button className="view-close-btn" onClick={cerrar}>
             Cerrar
@@ -403,6 +423,13 @@ export default function RecipeViewModal({
         mensaje="¿Eliminar esta nota definitivamente?"
         onConfirmar={confirmarEliminacion}
         onCancelar={() => setMostrarConfirmacion(false)}
+      />
+
+      <ConfirmModal
+        mostrar={mostrarConfirmacionImagen}
+        mensaje="¿Deseas eliminar esta imagen?"
+        onConfirmar={confirmarEliminacionImagen}
+        onCancelar={() => setMostrarConfirmacionImagen(false)}
       />
 
       <Modal
